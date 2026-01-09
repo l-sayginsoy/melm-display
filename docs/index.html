@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DRK Infomonitor Melm</title>
+  <title>Melm Display</title>
 
   <style>
     :root{
@@ -13,10 +13,11 @@
       --glass: rgba(255,255,255,0.10);
       --glass2: rgba(255,255,255,0.08);
       --stroke: rgba(255,255,255,0.14);
+      --stroke2: rgba(255,255,255,0.18);
     }
 
     html, body { height: 100%; }
-    body {
+    body{
       margin: 0;
       color: #fff;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -37,7 +38,7 @@
       will-change: opacity;
       z-index: -3;
     }
-    .bg-layer.is-on { opacity: 1; }
+    .bg-layer.is-on{ opacity: 1; }
 
     @keyframes bgMove{
       from{ transform: scale(1.03) translate3d(0,0,0); }
@@ -69,9 +70,9 @@
       gap: clamp(10px, 2vw, 20px);
     }
 
-    .clock-area { text-align: left; min-width: min(320px, 34vw); }
-    .clock { font-size: clamp(44px, 6vw, 80px); font-weight: 700; line-height: 1; }
-    .date  { font-size: clamp(16px, 2vw, 26px); color: rgba(255,255,255,0.70); margin-top: 8px; }
+    .clock-area{ text-align: left; min-width: min(320px, 34vw); }
+    .clock{ font-size: clamp(44px, 6vw, 80px); font-weight: 700; line-height: 1; }
+    .date{ font-size: clamp(16px, 2vw, 26px); color: rgba(255,255,255,0.70); margin-top: 8px; }
 
     .header-center{
       text-align: center;
@@ -82,6 +83,7 @@
       flex-direction: column;
       align-items: center;
     }
+
     .title{
       font-size: clamp(28px, 3.2vw, 44px);
       font-weight: 500;
@@ -92,8 +94,8 @@
     .logo-box{
       background: rgba(255,255,255,0.95);
       border: 1px solid var(--stroke);
-      padding: 10px 14px;
-      border-radius: 0;
+      padding: 12px 16px;
+      border-radius: 26px;
       box-shadow: 0 18px 38px rgba(0,0,0,0.42);
       display: flex;
       align-items: center;
@@ -223,7 +225,7 @@
 
     .fc-item{
       background: var(--glass2);
-      border: 1px solid var(--stroke);
+      border: 1px solid var(--stroke2);
       border-radius: 24px;
       width: clamp(72px, 8.2vw, 118px);
       padding: clamp(9px, 1.1vw, 14px) clamp(8px, 1vw, 10px);
@@ -260,9 +262,7 @@
     }
 
     @media (max-width: 900px){
-      footer{
-        padding-bottom: clamp(16px, 3vw, 40px);
-      }
+      footer{ padding-bottom: clamp(16px, 3vw, 40px); }
       .weather-now{ width: 100%; }
       .forecast-grid{
         flex-wrap: wrap;
@@ -305,7 +305,7 @@
     <header>
       <div class="clock-area">
         <div class="clock" id="clock">--:--</div>
-        <div class="date" id="date">Lade...</div>
+        <div class="date" id="date">Lade …</div>
       </div>
 
       <div class="header-center">
@@ -340,7 +340,7 @@
     </footer>
   </div>
 
-  <div id="build">BUILD: 1.4.3</div>
+  <div id="build">BUILD: 1.4.5</div>
 
   <script>
     const params = new URLSearchParams(location.search);
@@ -361,13 +361,15 @@
     let bgList = [];
     let activeLayer = "A";
 
-    function updateClock() {
+    function updateClock(){
       const d = new Date();
-      document.getElementById("clock").innerText = d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-      document.getElementById("date").innerText  = d.toLocaleDateString("de-DE", { weekday: "long", day: "2-digit", month: "long" });
+      document.getElementById("clock").innerText =
+        d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+      document.getElementById("date").innerText =
+        d.toLocaleDateString("de-DE", { weekday: "long", day: "2-digit", month: "long" });
     }
 
-    function seasonFromDate(d) {
+    function seasonFromDate(d){
       const m = d.getMonth() + 1;
       if (m === 12 || m === 1 || m === 2) return "winter";
       if (m === 3  || m === 4 || m === 5) return "spring";
@@ -375,7 +377,7 @@
       return "autumn";
     }
 
-    function weatherGroupFromCode(code) {
+    function weatherGroupFromCode(code){
       const c = Number(code);
       if (c === 0 || c === 1) return "clear";
       if (c === 2 || c === 3) return "partly";
@@ -387,7 +389,7 @@
       return "cloudy";
     }
 
-    function getWeatherIcon(code) {
+    function getWeatherIcon(code){
       const g = weatherGroupFromCode(code);
       if (g === "clear") return "☀️";
       if (g === "partly") return "⛅";
@@ -399,7 +401,7 @@
       return "☁️";
     }
 
-    function getWeatherText(code) {
+    function getWeatherText(code){
       const g = weatherGroupFromCode(code);
       if (g === "clear") return "Sonnig";
       if (g === "partly") return "Heiter";
@@ -411,7 +413,7 @@
       return "Wetter";
     }
 
-    function localBgCandidates(season, group) {
+    function localBgCandidates(season, group){
       const L = {
         winter: {
           clear:   ["bg/winter/clear/01.jpg", "bg/winter/clear/02.jpg"],
@@ -484,10 +486,10 @@
       const pair = base[group] || base.cloudy;
       const glow = accent[season] || "rgba(255,255,255,0.14)";
 
-      return `radial-gradient(circle at 20% 10%, ${glow} 0%, rgba(0,0,0,0) 42%), linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
+      return `radial-gradient(circle at 20% 10%, ${glow} 0%, rgba(0,0,0,0) 42%), linear-gradient(135deg, ${pair} 0%, ${pair} 100%)`;
     }
 
-    function setBackground(value, mode = "url") {
+    function setBackground(value, mode){
       const a = document.getElementById("bgA");
       const b = document.getElementById("bgB");
 
@@ -504,26 +506,33 @@
     function setBackgroundUrlWithFallback(url, fallbackRawCss){
       return new Promise((resolve) => {
         const img = new Image();
-        img.onload = () => { setBackground(url, "url"); resolve(true); };
-        img.onerror = () => { setBackground(fallbackRawCss, "raw"); resolve(false); };
-        img.src = url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+        img.onload = () => {
+          setBackground(url, "url");
+          resolve(true);
+        };
+        img.onerror = () => {
+          setBackground(fallbackRawCss, "raw");
+          resolve(false);
+        };
+        const safeUrl = encodeURI(url) + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+        img.src = safeUrl;
       });
     }
 
     async function pickOneBackground(season, group, isDay){
-      if (bgSrc === "picsum") {
+      if (bgSrc === "picsum"){
         setBackground("https://picsum.photos/1920/1080?random=" + Date.now(), "url");
         return;
       }
 
       const grad = gradientForWeather(season, group, isDay);
 
-      if (bgSrc === "gradient") {
+      if (bgSrc === "gradient"){
         setBackground(grad, "raw");
         return;
       }
 
-      if (!bgList.length) {
+      if (!bgList.length){
         setBackground(grad, "raw");
         return;
       }
@@ -533,35 +542,44 @@
       await setBackgroundUrlWithFallback(candidate, grad);
     }
 
-    function dayIndexUTC(d) {
+    function dayIndexUTC(d){
       const ms = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
       return Math.floor(ms / 86400000);
     }
 
-    function setDailyQuote(quotes) {
+    function setDailyQuote(quotes){
       const idx = Math.abs(dayIndexUTC(new Date())) % quotes.length;
-      const q = quotes[idx];
-      document.getElementById("quote").innerText = `"${q}"`;
+      document.getElementById("quote").innerText = """ + quotes[idx] + """;
     }
 
-    function startQuoteRotation(quotes, seconds) {
+    function startQuoteRotation(quotes, seconds){
       let i = 0;
-      function show() {
-        const q = quotes[i % quotes.length];
-        document.getElementById("quote").innerText = `"${q}"`;
+      function show(){
+        document.getElementById("quote").innerText = """ + quotes[i % quotes.length] + """;
         i += 1;
       }
       show();
       setInterval(show, Math.max(1000, seconds * 1000));
     }
 
-    async function fetchWeather() {
-      try {
+    async function loadQuotes(){
+      try{
+        const res = await fetch("quotes.json?v=" + Date.now(), { cache: "no-store" });
+        const list = await res.json();
+        if (!Array.isArray(list) || !list.length) throw new Error("quotes.json leer");
+        return list;
+      }catch{
+        return ["Heute ist ein guter Tag."];
+      }
+    }
+
+    async function fetchWeather(){
+      try{
         const url =
           "https://api.open-meteo.com/v1/forecast" +
           `?latitude=${LAT}&longitude=${LON}` +
           "&current_weather=true" +
-          "&daily=weathercode,temperature_2m_max,time" +
+          "&daily=weathercode,temperature_2m_max" +
           `&timezone=${TZ}`;
 
         const response = await fetch(url, { cache: "no-store" });
@@ -583,15 +601,17 @@
         const tmax  = Array.isArray(data.daily.temperature_2m_max) ? data.daily.temperature_2m_max : [];
 
         let html = "";
-        for (let i = 0; i < Math.min(5, times.length); i++) {
-          const dt = new Date(times[i] + "T00:00:00");
-          const dayLabel = (i === 0) ? "HEUTE" : dt.toLocaleDateString("de-DE", { weekday: "short" }).toUpperCase();
+        for (let i = 0; i < Math.min(5, times.length); i++){
+          const dt = new Date(times + "T00:00:00");
+          const dayLabel = (i === 0)
+            ? "HEUTE"
+            : dt.toLocaleDateString("de-DE", { weekday: "short" }).toUpperCase();
 
           html += `
             <div class="fc-item">
               <div class="fc-day">${dayLabel}</div>
-              <div class="fc-icon">${getWeatherIcon(codes[i])}</div>
-              <div class="fc-temp">${Math.round(tmax[i])}°</div>
+              <div class="fc-icon">${getWeatherIcon(codes)}</div>
+              <div class="fc-temp">${Math.round(tmax)}°</div>
             </div>
           `;
         }
@@ -601,40 +621,20 @@
         lastGroup = group;
         lastIsDay = isDay;
 
-        if (key !== lastWeatherKey) {
+        if (key !== lastWeatherKey){
           lastWeatherKey = key;
           bgList = localBgCandidates(season, group);
           await pickOneBackground(season, group, isDay);
         }
-      } catch (e) {
+      }catch(e){
         console.log("Wetter Fehler", e);
       }
     }
 
-    async function loadQuotes() {
-      try {
-        const res = await fetch("quotes.json?v=" + Date.now(), { cache: "no-store" });
-        const list = await res.json();
-        if (!Array.isArray(list) || !list.length) throw new Error("quotes.json leer");
-        return list;
-      } catch {
-        return ["Heute ist ein guter Tag."];
-      }
-    }
-
-    function minutesOfDay(d){
-      return d.getHours() * 60 + d.getMinutes();
-    }
-
-    function toMin(t){
-      const parts = String(t).split(":");
-      const hh = Number(parts[0] || 0);
-      const mm = Number(parts[1] || 0);
-      return hh * 60 + mm;
-    }
-
     function pickPlanByTime(now = new Date()){
-      const m = minutesOfDay(now);
+      const h = now.getHours();
+      const min = now.getMinutes();
+      const m = h * 60 + min;
 
       const SLOTS = [
         { start: "07:30", end: "08:30", file: "Frühstück.jpg" },
@@ -643,75 +643,41 @@
         { start: "17:30", end: "19:00", file: "Abendbrot.jpg" }
       ];
 
+      function toMin(t){
+        const parts = String(t).split(":");
+        const hh = Number(parts || 0);
+        const mm = Number(parts || 0);
+        return hh * 60 + mm;
+      }
+
       for (const s of SLOTS){
         const a = toMin(s.start);
         const b = toMin(s.end);
         if (m >= a && m < b) return s.file;
       }
+
       return "Speiseplan.jpg";
     }
 
-    function fileVariants(name){
-      const base = String(name || "").trim();
-      if (!base) return [];
-
-      const v = [];
-      const push = (x) => { if (x && !v.includes(x)) v.push(x); };
-
-      push(base);
-      push(base.normalize("NFC"));
-      push(base.normalize("NFD"));
-
-      const translit = base
-        .replaceAll("Ä", "Ae").replaceAll("Ö", "Oe").replaceAll("Ü", "Ue")
-        .replaceAll("ä", "ae").replaceAll("ö", "oe").replaceAll("ü", "ue")
-        .replaceAll("ß", "ss");
-      if (translit !== base) push(translit);
-
-      return v;
-    }
-
-    function setPlanImageWithFallback(file){
+    function startPlanScheduler(){
       const img = document.getElementById("plan-img");
-      const candidates = fileVariants(file);
-      let i = 0;
+      let lastFile = null;
 
-      function tryNext(){
-        if (i >= candidates.length) return;
-
-        const cand = candidates[i++];
-        const url = encodeURI(cand) + "?v=" + Date.now();
-
-        img.onerror = () => {
-          img.onerror = null;
-          tryNext();
-        };
-
-        img.src = url;
+      function setImg(file){
+        const safe = encodeURI(file) + "?v=" + Date.now();
+        img.src = safe;
       }
 
-      tryNext();
-    }
-
-    function startPlanScheduler(){
-      let last = null;
-
       function update(){
-        const file = pickPlanByTime();
-        if (file !== last){
-          setPlanImageWithFallback(file);
-          last = file;
+        const file = pickPlanByTime(new Date());
+        if (file !== lastFile){
+          setImg(file);
+          lastFile = file;
         }
       }
 
       update();
       setInterval(update, 10 * 1000);
-
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) update();
-      });
-      window.addEventListener("focus", update);
-      window.addEventListener("pageshow", update);
     }
 
     function startBackgroundTestRotation(){
@@ -724,11 +690,11 @@
       }, Math.max(1000, bgSec * 1000));
     }
 
-    function startDemoOrDailyQuotes(){
+    function startQuotes(){
       const demoQuote = params.get("demoquote");
-      if (demoQuote === "1") {
+      if (demoQuote === "1"){
         document.getElementById("quote").innerText =
-          "Heute zählt ein freundliches Wort, ein offenes Ohr und ein kleines Zeichen von Respekt, weil genau das unseren Alltag leichter macht und uns miteinander verbindet.";
+          ""Heute zählt ein freundliches Wort, ein offenes Ohr und ein kleines Zeichen von Respekt."";
         return;
       }
 
@@ -738,18 +704,8 @@
       });
     }
 
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    fetchWeather();
-    setInterval(fetchWeather, 5 * 60 * 1000);
-
-    startPlanScheduler();
-    startDemoOrDailyQuotes();
-    startBackgroundTestRotation();
-
-    (function autoDailyReload() {
-      function schedule() {
+    (function autoDailyReload(){
+      function schedule(){
         const now = new Date();
         const next = new Date(now);
         next.setHours(3, 10, 0, 0);
@@ -759,6 +715,16 @@
       }
       schedule();
     })();
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    fetchWeather();
+    setInterval(fetchWeather, 5 * 60 * 1000);
+
+    startPlanScheduler();
+    startQuotes();
+    startBackgroundTestRotation();
   </script>
 </body>
 </html>
