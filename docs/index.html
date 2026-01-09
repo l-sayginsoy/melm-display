@@ -292,6 +292,7 @@
       color: rgba(255,255,255,0.35);
       z-index: 9999;
       user-select: none;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -310,7 +311,7 @@
 
       <div class="header-center">
         <div class="title">ZITAT DES TAGES</div>
-        <div class="quote-pill" id="quote">"Lade Zitat …"</div>
+        <div class="quote-pill" id="quote">„Lade Zitat …“</div>
       </div>
 
       <div class="logo-box">
@@ -340,7 +341,7 @@
     </footer>
   </div>
 
-  <div id="build">BUILD: 1.4.5</div>
+  <div id="build">BUILD: 1.4.7</div>
 
   <script>
     const params = new URLSearchParams(location.search);
@@ -486,7 +487,7 @@
       const pair = base[group] || base.cloudy;
       const glow = accent[season] || "rgba(255,255,255,0.14)";
 
-      return `radial-gradient(circle at 20% 10%, ${glow} 0%, rgba(0,0,0,0) 42%), linear-gradient(135deg, ${pair} 0%, ${pair} 100%)`;
+      return `radial-gradient(circle at 20% 10%, ${glow} 0%, rgba(0,0,0,0) 42%), linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
     }
 
     function setBackground(value, mode){
@@ -506,16 +507,9 @@
     function setBackgroundUrlWithFallback(url, fallbackRawCss){
       return new Promise((resolve) => {
         const img = new Image();
-        img.onload = () => {
-          setBackground(url, "url");
-          resolve(true);
-        };
-        img.onerror = () => {
-          setBackground(fallbackRawCss, "raw");
-          resolve(false);
-        };
-        const safeUrl = encodeURI(url) + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
-        img.src = safeUrl;
+        img.onload = () => { setBackground(url, "url"); resolve(true); };
+        img.onerror = () => { setBackground(fallbackRawCss, "raw"); resolve(false); };
+        img.src = encodeURI(url) + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
       });
     }
 
@@ -549,13 +543,13 @@
 
     function setDailyQuote(quotes){
       const idx = Math.abs(dayIndexUTC(new Date())) % quotes.length;
-      document.getElementById("quote").innerText = """ + quotes[idx] + """;
+      document.getElementById("quote").innerText = "„" + quotes[idx] + "“";
     }
 
     function startQuoteRotation(quotes, seconds){
       let i = 0;
       function show(){
-        document.getElementById("quote").innerText = """ + quotes[i % quotes.length] + """;
+        document.getElementById("quote").innerText = "„" + quotes[i % quotes.length] + "“";
         i += 1;
       }
       show();
@@ -602,7 +596,7 @@
 
         let html = "";
         for (let i = 0; i < Math.min(5, times.length); i++){
-          const dt = new Date(times + "T00:00:00");
+          const dt = new Date(times[i] + "T00:00:00");
           const dayLabel = (i === 0)
             ? "HEUTE"
             : dt.toLocaleDateString("de-DE", { weekday: "short" }).toUpperCase();
@@ -610,8 +604,8 @@
           html += `
             <div class="fc-item">
               <div class="fc-day">${dayLabel}</div>
-              <div class="fc-icon">${getWeatherIcon(codes)}</div>
-              <div class="fc-temp">${Math.round(tmax)}°</div>
+              <div class="fc-icon">${getWeatherIcon(codes[i])}</div>
+              <div class="fc-temp">${Math.round(tmax[i])}°</div>
             </div>
           `;
         }
@@ -632,9 +626,7 @@
     }
 
     function pickPlanByTime(now = new Date()){
-      const h = now.getHours();
-      const min = now.getMinutes();
-      const m = h * 60 + min;
+      const m = now.getHours() * 60 + now.getMinutes();
 
       const SLOTS = [
         { start: "07:30", end: "08:30", file: "Frühstück.jpg" },
@@ -645,8 +637,8 @@
 
       function toMin(t){
         const parts = String(t).split(":");
-        const hh = Number(parts || 0);
-        const mm = Number(parts || 0);
+        const hh = Number(parts[0] || 0);
+        const mm = Number(parts[1] || 0);
         return hh * 60 + mm;
       }
 
@@ -655,29 +647,48 @@
         const b = toMin(s.end);
         if (m >= a && m < b) return s.file;
       }
-
       return "Speiseplan.jpg";
+    }
+
+    function setPlanImageWithFallback(imgEl, file){
+      const candidates = (String(file).startsWith("Frühstück"))
+        ? ["Frühstück.jpg", "Fruehstueck.jpg"]
+        : [file];
+
+      let i = 0;
+      function tryNext(){
+        const f = candidates[i];
+        const url = encodeURI(f) + "?v=" + Date.now();
+        imgEl.onerror = () => {
+          imgEl.onerror = null;
+          i += 1;
+          if (i < candidates.length) tryNext();
+        };
+        imgEl.src = url;
+      }
+      tryNext();
     }
 
     function startPlanScheduler(){
       const img = document.getElementById("plan-img");
+      const build = document.getElementById("build");
       let lastFile = null;
 
-      function setImg(file){
-        const safe = encodeURI(file) + "?v=" + Date.now();
-        img.src = safe;
-      }
-
-      function update(){
+      function update(force){
         const file = pickPlanByTime(new Date());
-        if (file !== lastFile){
-          setImg(file);
-          lastFile = file;
-        }
+        if (!force && file === lastFile) return;
+        setPlanImageWithFallback(img, file);
+        lastFile = file;
+        build.textContent = "BUILD: 1.4.7  PLAN: " + file;
       }
 
-      update();
-      setInterval(update, 10 * 1000);
+      update(true);
+      setInterval(() => update(false), 10 * 1000);
+
+      window.addEventListener("focus", () => update(true));
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) update(true);
+      });
     }
 
     function startBackgroundTestRotation(){
@@ -694,7 +705,7 @@
       const demoQuote = params.get("demoquote");
       if (demoQuote === "1"){
         document.getElementById("quote").innerText =
-          ""Heute zählt ein freundliches Wort, ein offenes Ohr und ein kleines Zeichen von Respekt."";
+          "„Heute zählt ein freundliches Wort, ein offenes Ohr und ein kleines Zeichen von Respekt.“";
         return;
       }
 
@@ -710,8 +721,7 @@
         const next = new Date(now);
         next.setHours(3, 10, 0, 0);
         if (next <= now) next.setDate(next.getDate() + 1);
-        const ms = next - now;
-        setTimeout(() => location.reload(), ms);
+        setTimeout(() => location.reload(), next - now);
       }
       schedule();
     })();
@@ -719,11 +729,12 @@
     updateClock();
     setInterval(updateClock, 1000);
 
+    startPlanScheduler();
+    startQuotes();
+
     fetchWeather();
     setInterval(fetchWeather, 5 * 60 * 1000);
 
-    startPlanScheduler();
-    startQuotes();
     startBackgroundTestRotation();
   </script>
 </body>
