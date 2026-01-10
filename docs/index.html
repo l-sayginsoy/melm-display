@@ -64,13 +64,19 @@
 
     header{
       display: grid;
-      grid-template-columns: minmax(320px, 1fr) auto minmax(320px, 1fr);
+      grid-template-columns: auto 1fr auto;
       align-items: flex-start;
       padding: calc(var(--padY) + 10px) var(--padX) 18px var(--padX);
       gap: clamp(10px, 2vw, 20px);
+      background: rgba(0,0,0,0.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      z-index: 5;
     }
 
-    .clock-area { text-align: left; min-width: min(320px, 34vw); padding-top: 6px; justify-self: start; }
+    .clock-area { text-align: left; min-width: 0; padding-top: 6px; justify-self: start; }
     .clock{ font-size: clamp(44px, 6vw, 80px); font-weight: 600; line-height: 1; }
     .date{ font-size: clamp(16px, 2vw, 26px); color: rgba(255,255,255,0.70); margin-top: 8px; }
 
@@ -171,12 +177,18 @@
 
     footer{
       display: grid;
-      grid-template-columns: minmax(180px, 26vw) minmax(0, 1fr) minmax(180px, 26vw);
+      grid-template-columns: auto 1fr auto;
       align-items: flex-end;
-      padding: 0 var(--padX) clamp(10px, 2.2vw, 34px) var(--padX);
+      padding: 12px var(--padX) clamp(10px, 2.2vw, 34px) var(--padX);
       gap: clamp(8px, 1.6vw, 22px);
       flex: 0 0 auto;
       min-height: 0;
+      background: rgba(0,0,0,0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      z-index: 5;
     }
 
     .weather-now{
@@ -188,7 +200,8 @@
       align-items: center;
       gap: clamp(10px, 1.6vmin, 18px);
       backdrop-filter: blur(10px);
-      width: 100%;
+      width: fit-content;
+      max-width: clamp(260px, 34vw, 520px);
       flex: 0 1 auto;
       min-height: 0;
       min-width: 0;
@@ -317,7 +330,7 @@
     }
 
     .footer-spacer{
-      width: 100%;
+      width: clamp(120px, 18vw, 220px);
       visibility: hidden;
       min-width: 0;
     }
@@ -325,7 +338,7 @@
     @media (max-width: 900px){
       footer{
         padding-bottom: clamp(16px, 3vw, 40px);
-        grid-template-columns: minmax(170px, 34vw) minmax(0, 1fr);
+        grid-template-columns: auto 1fr;
       }
       .footer-spacer{ display: none; }
       .forecast-grid{
