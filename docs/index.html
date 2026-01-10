@@ -71,8 +71,8 @@
     }
 
     .clock-area { text-align: left; min-width: min(320px, 34vw); padding-top: 6px; justify-self: start; }
-    .clock{ font-size: clamp(44px, 6vw, 80px); font-weight: 600; line-height: 1; }
-    .date{ font-size: clamp(16px, 2vw, 26px); color: rgba(255,255,255,0.70); margin-top: 8px; }
+    .clock{ font-size: clamp(32px, 5vw, 80px); font-weight: 600; line-height: 1; }
+    .date{ font-size: clamp(12px, 1.6vw, 26px); color: rgba(255,255,255,0.70); margin-top: clamp(4px, 0.6vw, 8px); }
 
     .header-center{
       text-align: center;
@@ -85,9 +85,9 @@
     }
 
     .title{
-      font-size: clamp(22px, 2.6vw, 34px);
+      font-size: clamp(14px, 2vw, 34px);
       font-weight: 600;
-      letter-spacing: 1.6px;
+      letter-spacing: clamp(1px, 0.12vw, 1.6px);
       text-transform: uppercase;
     }
 
@@ -119,10 +119,10 @@
       display: inline-block;
       background: var(--glass);
       border: 1px solid var(--stroke);
-      padding: 18px 34px;
-      border-radius: 30px;
-      margin-top: clamp(16px, 1.8vw, 26px);
-      font-size: clamp(22px, 2.4vw, 36px);
+      padding: clamp(10px, 1.4vw, 18px) clamp(16px, 2.4vw, 34px);
+      border-radius: clamp(16px, 2.2vw, 30px);
+      margin-top: clamp(10px, 1.4vw, 26px);
+      font-size: clamp(14px, 2vw, 36px);
       font-style: italic;
       color: rgba(255,255,255,0.92);
       backdrop-filter: blur(10px);
@@ -181,27 +181,27 @@
     .weather-now{
       background: var(--glass);
       border: 1px solid var(--stroke);
-      padding: clamp(10px, 1.6vw, 20px) clamp(12px, 1.9vw, 30px);
-      border-radius: 30px;
+      padding: clamp(8px, 1.4vw, 20px) clamp(10px, 1.6vw, 30px);
+      border-radius: clamp(18px, 2.2vw, 30px);
       display: flex;
       align-items: center;
-      gap: clamp(10px, 1.6vw, 22px);
+      gap: clamp(8px, 1.4vw, 22px);
       backdrop-filter: blur(10px);
-      width: clamp(240px, 32vw, 430px);
+      width: clamp(180px, 26vw, 430px);
       flex: 0 0 auto;
       min-height: 0;
     }
 
     .w-icon-big{
-      font-size: clamp(22px, 3.0vw, 52px);
-      width: clamp(30px, 3.6vw, 62px);
+      font-size: clamp(18px, 2.6vw, 52px);
+      width: clamp(24px, 3.2vw, 62px);
       text-align: center;
       flex: 0 0 auto;
       line-height: 1;
     }
 
     .w-temp-big{
-      font-size: clamp(40px, 6vw, 86px);
+      font-size: clamp(28px, 4.5vw, 86px);
       font-weight: 400;
       letter-spacing: -1px;
       flex: 0 0 auto;
@@ -209,7 +209,7 @@
     }
 
     .w-info-text{
-      font-size: clamp(12px, 1.5vw, 20px);
+      font-size: clamp(10px, 1.3vw, 20px);
       color: rgba(255,255,255,0.72);
       line-height: 1.35;
       min-width: 0;
@@ -218,18 +218,18 @@
     
 
 .w-metrics{
-  margin-top: clamp(6px, 0.8vw, 10px);
+  margin-top: clamp(4px, 0.6vw, 10px);
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(6px, 0.8vw, 10px);
+  gap: clamp(4px, 0.5vw, 10px);
 }
 
 .wm{
-  font-size: clamp(11px, 1.1vw, 14px);
+  font-size: clamp(9px, 1vw, 14px);
   color: rgba(255,255,255,0.70);
   background: rgba(0,0,0,0.18);
   border: 1px solid rgba(255,255,255,0.12);
-  padding: 6px 10px;
+  padding: clamp(3px, 0.4vw, 6px) clamp(6px, 0.7vw, 10px);
   border-radius: 999px;
   line-height: 1;
   white-space: nowrap;
@@ -238,7 +238,7 @@
 .wm-k{
   color: rgba(255,255,255,0.55);
   font-weight: 600;
-  margin-right: 6px;
+  margin-right: clamp(3px, 0.4vw, 6px);
 }
 
 .fc-hi{
@@ -255,16 +255,16 @@
   line-height: 1.1;
 }
 .fc-temps{
-  font-size: clamp(13px, 1.7vw, 22px);
+  font-size: clamp(9px, 1.2vw, 22px);
   font-weight: 700;
   line-height: 1.1;
-  margin-top: 6px;
+  margin-top: clamp(2px, 0.3vw, 6px);
   white-space: nowrap;
 }
 
 .forecast-grid{
       display: flex;
-      gap: clamp(8px, 1.4vw, 14px);
+      gap: clamp(5px, 0.8vw, 14px);
       flex-wrap: nowrap;
       justify-content: center;
       align-items: flex-end;
@@ -277,39 +277,43 @@
     .fc-item{
       background: var(--glass2);
       border: 1px solid var(--stroke2);
-      border-radius: 24px;
-      width: clamp(72px, 8.2vw, 118px);
+      border-radius: clamp(14px, 1.8vw, 24px);
+      width: clamp(52px, 7vw, 118px);
       aspect-ratio: 1;
-      padding: clamp(9px, 1.1vw, 14px) clamp(8px, 1vw, 10px);
+      padding: clamp(6px, 0.8vw, 14px);
       text-align: center;
       backdrop-filter: blur(10px);
       flex: 0 0 auto;
       min-width: 0;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     .fc-day{
-      font-size: clamp(11px, 1.1vw, 14px);
+      font-size: clamp(8px, 0.9vw, 14px);
       font-weight: 600;
       color: rgba(255,255,255,0.52);
-      margin-bottom: clamp(6px, 0.8vw, 12px);
+      margin-bottom: clamp(3px, 0.5vw, 12px);
       letter-spacing: 0.8px;
     }
 
     .fc-icon{
-      font-size: clamp(18px, 2.4vw, 34px);
-      margin-bottom: clamp(6px, 0.9vw, 10px);
+      font-size: clamp(14px, 2vw, 34px);
+      margin-bottom: clamp(3px, 0.5vw, 10px);
       line-height: 1;
     }
 
     .fc-temp{
-      font-size: clamp(14px, 1.9vw, 24px);
+      font-size: clamp(10px, 1.4vw, 24px);
       font-weight: 600;
       line-height: 1.1;
     }
 
     .footer-spacer{
-      width: clamp(300px, 34vw, 430px);
+      width: clamp(180px, 26vw, 430px);
       flex: 0 0 auto;
       visibility: hidden;
     }
@@ -399,7 +403,7 @@
     </footer>
   </div>
 
-  <div id="build">BUILD: 1.5.0</div>
+  <div id="build">BUILD: 1.5.1</div>
 
   <script>
     const params = new URLSearchParams(location.search);
