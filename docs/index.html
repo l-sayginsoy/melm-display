@@ -254,6 +254,14 @@
   margin-top: 2px;
   line-height: 1.1;
 }
+.fc-temps{
+  font-size: clamp(13px, 1.7vw, 22px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
 .forecast-grid{
       display: flex;
       gap: clamp(8px, 1.4vw, 14px);
@@ -377,9 +385,8 @@
           Ludwigshafen<br>
           <span id="main-desc">Wetter wird geladen …</span>
           <div class="w-metrics">
-            <div class="wm"><span class="wm-k">Tief</span><span id="today-min">--°</span></div>
-            <div class="wm"><span class="wm-k">Hoch</span><span id="today-max">--°</span></div>
-            <div class="wm"><span class="wm-k">Wind</span><span id="today-wind">-- km h</span></div>
+            <div class="wm"><span class="wm-k">Gefühlt</span><span id="main-feels">--°</span></div>
+            <div class="wm"><span class="wm-k">Wind</span><span id="main-wind">-- km/h</span></div>
           </div>
         </div>
       </div>
@@ -390,7 +397,7 @@
     </footer>
   </div>
 
-  <div id="build">BUILD: 1.4.8</div>
+  <div id="build">BUILD: 1.4.9</div>
 
   <script>
     const params = new URLSearchParams(location.search);
@@ -439,10 +446,12 @@
       return "cloudy";
     }
 
-    function getWeatherIcon(code){
+    function getWeatherIcon(code, isDay){
       const g = weatherGroupFromCode(code);
-      if (g === "clear") return "☀️";
-      if (g === "partly") return "⛅";
+      const day = (typeof isDay === "undefined") ? true : !!isDay;
+
+      if (g === "clear") return day ? "☀️" : "🌙";
+      if (g === "partly") return day ? "⛅" : "🌙☁️";
       if (g === "cloudy") return "☁️";
       if (g === "fog") return "🌫️";
       if (g === "rain") return "🌧️";
@@ -451,15 +460,22 @@
       return "☁️";
     }
 
-    function getWeatherText(code){
-      const g = weatherGroupFromCode(code);
-      if (g === "clear") return "Sonnig";
-      if (g === "partly") return "Heiter";
-      if (g === "cloudy") return "Wolkig";
-      if (g === "fog") return "Nebel";
-      if (g === "rain") return "Regen";
-      if (g === "snow") return "Schnee";
-      if (g === "thunder") return "Gewitter";
+    function getWeatherText(code, isDay){
+      const c = Number(code);
+      const day = (typeof isDay === "undefined") ? true : !!isDay;
+
+      if (c === 0) return day ? "Sonnig" : "Klar";
+      if (c === 1) return day ? "Meist sonnig" : "Meist klar";
+      if (c === 2) return "Leicht bewölkt";
+      if (c === 3) return "Stark bewölkt";
+      if (c === 45 || c === 48) return "Nebel";
+
+      if (c >= 51 && c <= 57) return "Nieselregen";
+      if (c >= 61 && c <= 67) return "Regen";
+      if (c >= 71 && c <= 77) return "Schnee";
+      if (c >= 80 && c <= 82) return "Regenschauer";
+      if (c >= 95 && c <= 99) return "Gewitter";
+
       return "Wetter";
     }
 
@@ -635,9 +651,9 @@
         const isDay = isProbablyDay(cw);
         const key = season + "|" + group + "|" + (isDay ? "day" : "night");
 
-        document.getElementById("main-icon").innerText = getWeatherIcon(cw.weathercode);
+        document.getElementById("main-icon").innerText = getWeatherIcon(cw.weathercode, isDay);
         document.getElementById("main-temp").innerText = Math.round(cw.temperature) + "°";
-        document.getElementById("main-desc").innerText = getWeatherText(cw.weathercode);
+        document.getElementById("main-desc").innerText = getWeatherText(cw.weathercode, isDay);
 
         const tMinToday = (Array.isArray(data.daily.temperature_2m_min) && data.daily.temperature_2m_min.length)
           ? data.daily.temperature_2m_min[0]
@@ -646,13 +662,35 @@
           ? data.daily.temperature_2m_max[0]
           : null;
 
-        const elMin = document.getElementById("today-min");
-        const elMax = document.getElementById("today-max");
-        const elWind = document.getElementById("today-wind");
+        const elFeels = document.getElementById("main-feels");
+        const elWind = document.getElementById("main-wind");
+        // Gefuehlte Temperatur aus hourly.apparent_temperature, passend zur current_weather.time
+        let feels = null;
+        if (data && data.hourly && Array.isArray(data.hourly.time) && Array.isArray(data.hourly.apparent_temperature)) {
+          const timesH = data.hourly.time;
+          const valsH = data.hourly.apparent_temperature;
+          const target = (cw && cw.time) ? new Date(cw.time).getTime() : null;
 
-        if (elMin && tMinToday !== null) elMin.innerText = Math.round(tMinToday) + "°";
-        if (elMax && tMaxToday !== null) elMax.innerText = Math.round(tMaxToday) + "°";
-        if (elWind && typeof cw.windspeed === "number") elWind.innerText = Math.round(cw.windspeed) + " km h";
+          if (target !== null) {
+            let bestIdx = -1;
+            let bestDiff = Infinity;
+            for (let i = 0; i < timesH.length; i++) {
+              const ts = new Date(timesH[i]).getTime();
+              if (!Number.isFinite(ts)) continue;
+              const diff = Math.abs(ts - target);
+              if (diff < bestDiff) {
+                bestDiff = diff;
+                bestIdx = i;
+              }
+            }
+            if (bestIdx >= 0) feels = valsH[bestIdx];
+          }
+        }
+
+        if (feels == null && cw && typeof cw.temperature === "number") feels = cw.temperature;
+
+        if (elFeels && feels != null) elFeels.innerText = Math.round(feels) + "°";
+        if (elWind && typeof cw.windspeed === "number") elWind.innerText = Math.round(cw.windspeed) + " km/h";
 
 
         const times = Array.isArray(data.daily.time) ? data.daily.time : [];
@@ -670,9 +708,8 @@
           html += `
             <div class="fc-item">
               <div class="fc-day">${dayLabel}</div>
-              <div class="fc-icon">${getWeatherIcon(codes[i])}</div>
-              <div class="fc-hi">${Math.round(tmax[i])}°</div>
-              <div class="fc-lo">${(tmin[i] != null) ? Math.round(tmin[i]) : "--"}°</div>
+              <div class="fc-icon">${getWeatherIcon(codes[i], true)}</div>
+              <div class="fc-temps">${Math.round(tmax[i])}° / ${((tmin[i] != null) ? Math.round(tmin[i]) : "--")}°</div>
             </div>
           `;
         }
