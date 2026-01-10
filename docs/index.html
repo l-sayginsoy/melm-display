@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Melm Display</title>
-    <meta http-equiv="refresh" content="300">
-
-  <style>
+<style>
     :root{
       --padX: clamp(18px, 4vw, 60px);
       --padY: clamp(14px, 2.2vw, 26px);
@@ -743,5 +741,38 @@ let lastFile = null;
 
     startBackgroundTestRotation();
   </script>
+<!-- WATCHDOG START -->
+<script>
+(() => {
+  let lastBeat = Date.now();
+
+  // Herzschlag: wenn JS normal läuft, wird das regelmäßig aktualisiert
+  setInterval(() => { lastBeat = Date.now(); }, 5000);
+
+  // Wenn Timer/JS hängen: Seite neu laden
+  setInterval(() => {
+    if (Date.now() - lastBeat > 90000) {
+      const u = new URL(location.href);
+      u.searchParams.set("r", String(Date.now()));
+      location.replace(u.toString());
+    }
+  }, 15000);
+
+  // nachts einmal leise neu laden (optional, meist merkt das niemand)
+  const nightly = () => {
+    const d = new Date();
+    const t = new Date(d);
+    t.setHours(3, 17, 0, 0);
+    if (t.getTime() <= d.getTime()) t.setDate(t.getDate() + 1);
+    setTimeout(() => {
+      const u = new URL(location.href);
+      u.searchParams.set("r", String(Date.now()));
+      location.replace(u.toString());
+    }, t.getTime() - d.getTime());
+  };
+  nightly();
+})();
+</script>
+<!-- WATCHDOG END -->
 </body>
 </html>
