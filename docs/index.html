@@ -672,35 +672,24 @@
     }
 
     function startPlanScheduler(){
-  const img = document.getElementById("plan-img");
-  let lastFile = null;
-  let lastRun = Date.now();
+      const img = document.getElementById("plan-img");
+let lastFile = null;
 
-  function update(force){
-    lastRun = Date.now();
-    const file = pickPlanByTime(new Date());
-    if (!force && file === lastFile) return;
-    setPlanImageWithFallback(img, file);
-    lastFile = file;
-  }
-
-  function loop(){
-    update(false);
-    setTimeout(loop, 10 * 1000);
-  }
-
-  update(true);
-  setTimeout(loop, 10 * 1000);
-
-  setInterval(() => {
-    if (Date.now() - lastRun > 90 * 1000) location.reload();
-  }, 15 * 1000);
-
-  window.addEventListener("focus", () => update(true));
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) update(true);
-  });
+      function update(force){
+        const file = pickPlanByTime(new Date());
+        if (!force && file === lastFile) return;
+        setPlanImageWithFallback(img, file);
+        lastFile = file;
 }
+
+      update(true);
+      setInterval(() => update(false), 10 * 1000);
+
+      window.addEventListener("focus", () => update(true));
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) update(true);
+      });
+    }
 
     function startBackgroundTestRotation(){
       if (!(bgSec && bgSec > 0 && bgSrc === "picsum")) return;
