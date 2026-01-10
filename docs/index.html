@@ -295,10 +295,17 @@
       user-select: none;
       white-space: nowrap;
     }
-  </style>
+  /* SCALE LAYOUT START */
+html, body { width: 100%; height: 100%; margin: 0; }
+#viewport { width: 100vw; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #000; }
+#stage { width: 1920px; height: 1080px; transform-origin: center center; }
+/* SCALE LAYOUT END */
+</style>
 </head>
 
 <body>
+<div id="viewport">
+  <div id="stage">
   <div id="bgA" class="bg-layer is-on"></div>
   <div id="bgB" class="bg-layer"></div>
   <div class="bg-overlay"></div>
@@ -774,5 +781,32 @@ let lastFile = null;
 })();
 </script>
 <!-- WATCHDOG END -->
+  </div>
+</div>
+<!-- SCALE SCRIPT START -->
+<script>
+(function () {
+  const BASE_W = 1920;
+  const BASE_H = 1080;
+
+  function applyScale() {
+    const stage = document.getElementById("stage");
+    if (!stage) return;
+
+    const sx = window.innerWidth / BASE_W;
+    const sy = window.innerHeight / BASE_H;
+    const scale = Math.min(sx, sy);
+
+    stage.style.transform = "scale(" + scale + ")";
+  }
+
+  window.addEventListener("resize", applyScale);
+  window.addEventListener("orientationchange", applyScale);
+  document.addEventListener("DOMContentLoaded", applyScale);
+  applyScale();
+})();
+</script>
+<!-- SCALE SCRIPT END -->
+
 </body>
 </html>
