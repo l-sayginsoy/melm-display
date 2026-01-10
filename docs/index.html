@@ -213,20 +213,6 @@
       min-width: 0;
     }
 
-    .w-city{
-      font-weight: 600;
-      letter-spacing: 0.2px;
-    }
-
-    .w-sub{
-      margin-top: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      font-size: clamp(11px, 1.25vw, 16px);
-      color: rgba(255,255,255,0.68);
-    }
-
     .forecast-grid{
       display: flex;
       gap: clamp(8px, 1.4vw, 14px);
@@ -346,12 +332,8 @@
         <div class="w-icon-big" id="main-icon">--</div>
         <div class="w-temp-big" id="main-temp">--°</div>
         <div class="w-info-text">
-          <div class="w-city">Ludwigshafen</div>
-          <div id="main-desc">Wetter wird geladen …</div>
-          <div class="w-sub">
-            <span id="main-feels"></span>
-            <span id="main-range"></span>
-          </div>
+          Ludwigshafen<br>
+          <span id="main-desc">Wetter wird geladen …</span>
         </div>
       </div>
 
@@ -410,17 +392,15 @@
       return "cloudy";
     }
 
-    function getWeatherIcon(code, isDay = true){
+    function getWeatherIcon(code){
       const g = weatherGroupFromCode(code);
-      const day = !!isDay;
-
-      if (g === "clear")  return day ? "☀️" : "🌙";
-      if (g === "partly") return day ? "⛅" : "☁️";
+      if (g === "clear") return "☀️";
+      if (g === "partly") return "⛅";
       if (g === "cloudy") return "☁️";
-      if (g === "fog")    return "🌫️";
-      if (g === "rain")   return "🌧️";
-      if (g === "snow")   return "❄️";
-      if (g === "thunder")return "⛈️";
+      if (g === "fog") return "🌫️";
+      if (g === "rain") return "🌧️";
+      if (g === "snow") return "❄️";
+      if (g === "thunder") return "⛈️";
       return "☁️";
     }
 
@@ -595,9 +575,7 @@
           "https://api.open-meteo.com/v1/forecast" +
           `?latitude=${LAT}&longitude=${LON}` +
           "&current_weather=true" +
-          "&hourly=apparent_temperature" +
-          "&daily=weathercode,temperature_2m_max,temperature_2m_min" +
-          "&forecast_days=5" +
+          "&daily=weathercode,temperature_2m_max" +
           `&timezone=${TZ}`;
 
         const response = await fetch(url, { cache: "no-store" });
@@ -610,43 +588,13 @@
         const isDay = isProbablyDay(cw);
         const key = season + "|" + group + "|" + (isDay ? "day" : "night");
 
-        // Gefühlt Temperatur aus hourly ableiten
-        let feels = null;
-        try{
-          const ht = data.hourly && Array.isArray(data.hourly.time) ? data.hourly.time : [];
-          const ha = data.hourly && Array.isArray(data.hourly.apparent_temperature) ? data.hourly.apparent_temperature : [];
-          if (ht.length && ha.length && cw.time){
-            const idx = ht.indexOf(cw.time);
-            if (idx >= 0) feels = ha[idx];
-            else{
-              const hourPrefix = String(cw.time).slice(0, 13);
-              const j = ht.findIndex(x => String(x).startsWith(hourPrefix));
-              if (j >= 0) feels = ha[j];
-            }
-          }
-        } catch {}
-
-        document.getElementById("main-icon").innerText = getWeatherIcon(cw.weathercode, isDay);
+        document.getElementById("main-icon").innerText = getWeatherIcon(cw.weathercode);
         document.getElementById("main-temp").innerText = Math.round(cw.temperature) + "°";
         document.getElementById("main-desc").innerText = getWeatherText(cw.weathercode);
-
-        const feelsEl = document.getElementById("main-feels");
-        if (feelsEl){
-          feelsEl.innerText =
-            (feels === null || typeof feels === "undefined")
-              ? ""
-              : ("Gefühlt: " + Math.round(feels) + "°");
-        }
 
         const times = Array.isArray(data.daily.time) ? data.daily.time : [];
         const codes = Array.isArray(data.daily.weathercode) ? data.daily.weathercode : [];
         const tmax  = Array.isArray(data.daily.temperature_2m_max) ? data.daily.temperature_2m_max : [];
-        const tmin  = Array.isArray(data.daily.temperature_2m_min) ? data.daily.temperature_2m_min : [];
-
-        const rangeEl = document.getElementById("main-range");
-        if (rangeEl && typeof tmin[0] === "number" && typeof tmax[0] === "number"){
-          rangeEl.innerText = `Min: ${Math.round(tmin[0])}°  Max: ${Math.round(tmax[0])}°`;
-        }
 
         let html = "";
         for (let i = 0; i < Math.min(5, times.length); i++){
@@ -655,32 +603,14 @@
             ? "HEUTE"
             : dt.toLocaleDateString("de-DE", { weekday: "short" }).toUpperCase();
 
-          const minTxt = (typeof tmin[i] === "number") ? (Math.round(tmin[i]) + "°") : "--";
-          const maxTxt = (typeof tmax[i] === "number") ? (Math.round(tmax[i]) + "°") : "--";
-
           html += `
             <div class="fc-item">
               <div class="fc-day">${dayLabel}</div>
-              <div class="fc-icon">${getWeatherIcon(codes[i], true)}</div>
-              <div class="fc-temp">${minTxt} / ${maxTxt}</div>
+              <div class="fc-icon">${getWeatherIcon(codes[i])}</div>
+              <div class="fc-temp">${Math.round(tmax[i])}°</div>
             </div>
           `;
         }
-        document.getElementById("forecast-area").innerHTML = html;
-
-        lastSeason = season;
-        lastGroup  = group;
-        lastIsDay  = isDay;
-
-        if (key !== lastWeatherKey){
-          lastWeatherKey = key;
-          bgList = localBgCandidates(season, group);
-          await pickOneBackground(season, group, isDay);
-        }
-      } catch(e){
-        console.log("Wetter Fehler", e);
-      }
-    }
         document.getElementById("forecast-area").innerHTML = html;
 
         lastSeason = season;
