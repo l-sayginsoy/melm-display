@@ -295,7 +295,18 @@
       user-select: none;
       white-space: nowrap;
     }
-  </style>
+  
+/* RESPONSIVE ZOOM START */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+/* verhindert Scrollbars bei Zoom */
+body {
+  overflow: hidden;
+}
+/* RESPONSIVE ZOOM END */
+</style>
 </head>
 
 <body>
@@ -774,5 +785,36 @@ let lastFile = null;
 })();
 </script>
 <!-- WATCHDOG END -->
+<!-- RESPONSIVE ZOOM SCRIPT START -->
+<script>
+(function () {
+  const BASE_W = 1920;
+  const BASE_H = 1080;
+
+  function applyZoom() {
+    const sx = window.innerWidth / BASE_W;
+    const sy = window.innerHeight / BASE_H;
+    const scale = Math.min(1, Math.min(sx, sy));
+
+    // zoom nur wenn kleiner als Basis, sonst 1
+    document.documentElement.style.zoom = String(scale);
+
+    // wenn gezoomt, setze eine feste Basisflaeche, damit nichts umbricht
+    if (scale < 1) {
+      document.body.style.width = BASE_W + "px";
+      document.body.style.height = BASE_H + "px";
+    } else {
+      document.body.style.width = "";
+      document.body.style.height = "";
+    }
+  }
+
+  window.addEventListener("resize", applyZoom);
+  window.addEventListener("orientationchange", applyZoom);
+  document.addEventListener("DOMContentLoaded", applyZoom);
+  applyZoom();
+})();
+</script>
+<!-- RESPONSIVE ZOOM SCRIPT END -->
 </body>
 </html>
