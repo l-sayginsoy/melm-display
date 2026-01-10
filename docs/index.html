@@ -181,27 +181,27 @@
     .weather-now{
       background: var(--glass);
       border: 1px solid var(--stroke);
-      padding: clamp(8px, 1.4vw, 20px) clamp(10px, 1.6vw, 30px);
-      border-radius: clamp(18px, 2.2vw, 30px);
+      padding: clamp(6px, 1.2vw, 20px) clamp(8px, 1.4vw, 30px);
+      border-radius: clamp(14px, 2vw, 30px);
       display: flex;
       align-items: center;
-      gap: clamp(8px, 1.4vw, 22px);
+      gap: clamp(6px, 1.2vw, 22px);
       backdrop-filter: blur(10px);
-      width: clamp(180px, 26vw, 430px);
+      width: clamp(140px, 24vw, 430px);
       flex: 0 0 auto;
       min-height: 0;
     }
 
     .w-icon-big{
-      font-size: clamp(18px, 2.6vw, 52px);
-      width: clamp(24px, 3.2vw, 62px);
+      font-size: clamp(14px, 2.4vw, 52px);
+      width: clamp(18px, 2.8vw, 62px);
       text-align: center;
       flex: 0 0 auto;
       line-height: 1;
     }
 
     .w-temp-big{
-      font-size: clamp(28px, 4.5vw, 86px);
+      font-size: clamp(20px, 4vw, 86px);
       font-weight: 400;
       letter-spacing: -1px;
       flex: 0 0 auto;
@@ -209,7 +209,7 @@
     }
 
     .w-info-text{
-      font-size: clamp(10px, 1.3vw, 20px);
+      font-size: clamp(8px, 1.1vw, 20px);
       color: rgba(255,255,255,0.72);
       line-height: 1.35;
       min-width: 0;
@@ -218,18 +218,18 @@
     
 
 .w-metrics{
-  margin-top: clamp(4px, 0.6vw, 10px);
+  margin-top: clamp(2px, 0.5vw, 10px);
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(4px, 0.5vw, 10px);
+  gap: clamp(2px, 0.4vw, 10px);
 }
 
 .wm{
-  font-size: clamp(9px, 1vw, 14px);
+  font-size: clamp(7px, 0.9vw, 14px);
   color: rgba(255,255,255,0.70);
   background: rgba(0,0,0,0.18);
   border: 1px solid rgba(255,255,255,0.12);
-  padding: clamp(3px, 0.4vw, 6px) clamp(6px, 0.7vw, 10px);
+  padding: clamp(2px, 0.35vw, 6px) clamp(4px, 0.6vw, 10px);
   border-radius: 999px;
   line-height: 1;
   white-space: nowrap;
@@ -238,7 +238,7 @@
 .wm-k{
   color: rgba(255,255,255,0.55);
   font-weight: 600;
-  margin-right: clamp(3px, 0.4vw, 6px);
+  margin-right: clamp(2px, 0.3vw, 6px);
 }
 
 .fc-hi{
@@ -313,7 +313,7 @@
     }
 
     .footer-spacer{
-      width: clamp(180px, 26vw, 430px);
+      width: clamp(140px, 24vw, 430px);
       flex: 0 0 auto;
       visibility: hidden;
     }
@@ -403,7 +403,7 @@
     </footer>
   </div>
 
-  <div id="build">BUILD: 1.5.1</div>
+  <div id="build">BUILD: 1.5.2</div>
 
   <script>
     const params = new URLSearchParams(location.search);
