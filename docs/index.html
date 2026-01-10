@@ -171,10 +171,10 @@
 
     footer{
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: minmax(180px, 26vw) minmax(0, 1fr) minmax(180px, 26vw);
       align-items: flex-end;
       padding: 0 var(--padX) clamp(10px, 2.2vw, 34px) var(--padX);
-      gap: clamp(10px, 2vw, 26px);
+      gap: clamp(8px, 1.6vw, 22px);
       flex: 0 0 auto;
       min-height: 0;
     }
@@ -188,13 +188,14 @@
       align-items: center;
       gap: clamp(10px, 1.6vmin, 18px);
       backdrop-filter: blur(10px);
-      width: clamp(200px, 26vw, 360px);
+      width: 100%;
       flex: 0 1 auto;
       min-height: 0;
+      min-width: 0;
     }
 
     .w-icon-big{
-      font-size: clamp(18px, 3.4vmin, 52px);
+      font-size: clamp(16px, 2.8vw, 46px);
       width: clamp(26px, 3.8vmin, 60px);
       text-align: center;
       flex: 0 0 auto;
@@ -202,7 +203,7 @@
     }
 
     .w-temp-big{
-      font-size: clamp(32px, 6.8vmin, 78px);
+      font-size: clamp(28px, 4.8vw, 72px);
       font-weight: 400;
       letter-spacing: -1px;
       flex: 0 0 auto;
@@ -265,30 +266,33 @@
 
 .forecast-grid{
       display: flex;
-      gap: clamp(8px, 1.3vmin, 14px);
-      flex-wrap: wrap;
+      gap: clamp(6px, 1.0vw, 14px);
+      flex-wrap: nowrap;
       justify-content: center;
       align-items: flex-start;
       margin-left: auto;
       margin-right: auto;
-      width: min(100%, 860px);
+      width: 100%;
+      max-width: 920px;
       min-width: 0;
+      overflow: hidden;
     }
 
     .fc-item{
       background: var(--glass2);
       border: 1px solid var(--stroke2);
       border-radius: 22px;
-      width: clamp(64px, 7vmin, 108px);
       aspect-ratio: 1 / 1.22;
-      padding: clamp(8px, 1.0vmin, 12px) clamp(8px, 1.0vmin, 10px);
+      padding: clamp(8px, 1.0vmin, 12px) clamp(8px, 0.9vmin, 10px);
       text-align: center;
       backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      flex: 0 0 auto;
-      min-width: 0;
+      flex: 1 1 0;
+      min-width: 52px;
+      max-width: 120px;
+      width: auto;
     }
 
     .fc-day{
@@ -313,21 +317,22 @@
     }
 
     .footer-spacer{
-      width: clamp(220px, 30vw, 420px);
-      flex: 0 1 auto;
+      width: 100%;
       visibility: hidden;
+      min-width: 0;
     }
 
     @media (max-width: 900px){
-      footer{ padding-bottom: clamp(16px, 3vw, 40px); }
-      .weather-now{ width: 100%; }
-      .forecast-grid{
-        flex-wrap: wrap;
-        justify-content: center;
-        align-content: flex-end;
-        width: 100%;
+      footer{
+        padding-bottom: clamp(16px, 3vw, 40px);
+        grid-template-columns: minmax(170px, 34vw) minmax(0, 1fr);
       }
-      .plan-frame{ height: min(62vh, calc(100vh - 360px)); }
+      .footer-spacer{ display: none; }
+      .forecast-grid{
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .plan-frame{ height: min(62vh, calc(100vh - 340px)); }
     }
 
     @media (max-height: 820px){
