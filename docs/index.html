@@ -1,881 +1,504 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Melm Display</title>
-<style>
-    :root{
-      --padX: clamp(18px, 4vw, 60px);
-      --padY: clamp(14px, 2.2vw, 26px);
-
-      --glass: rgba(255,255,255,0.10);
-      --glass2: rgba(255,255,255,0.08);
-      --stroke: rgba(255,255,255,0.14);
-      --stroke2: rgba(255,255,255,0.18);
-    }
-
-    html, body { height: 100%; }
-    body{
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Template</title>
+  <style>
+    /* ==================== RESET & BASE ==================== */
+    * {
       margin: 0;
-      color: #fff;
-      font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 400;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .bg-layer{
-      position: fixed;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      opacity: 0;
-      transition: opacity 900ms ease;
-      transform: scale(1.03);
-      animation: bgMove 18s ease-in-out infinite alternate;
-      will-change: opacity;
-      z-index: -3;
-    }
-    .bg-layer.is-on{ opacity: 1; }
-
-    @keyframes bgMove{
-      from{ transform: scale(1.03) translate3d(0,0,0); }
-      to{ transform: scale(1.08) translate3d(14px,-10px,0); }
-    }
-
-    .bg-overlay{
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 50% 40%,
-          rgba(0,0,0,0.10) 0%,
-          rgba(0,0,0,0.35) 55%,
-          rgba(0,0,0,0.55) 100%);
-      z-index: -2;
-    }
-
-    .layout{
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header{
-      display: grid;
-      grid-template-columns: minmax(320px, 1fr) auto minmax(320px, 1fr);
-      align-items: flex-start;
-      padding: calc(var(--padY) + 10px) var(--padX) 18px var(--padX);
-      gap: clamp(10px, 2vw, 20px);
-    }
-
-    .clock-area { text-align: left; min-width: min(320px, 34vw); padding-top: 6px; justify-self: start; }
-    .clock{ font-size: clamp(44px, 6vw, 80px); font-weight: 600; line-height: 1; }
-    .date{ font-size: clamp(16px, 2vw, 26px); color: rgba(255,255,255,0.70); margin-top: 8px; }
-
-    .header-center{
-      text-align: center;
-      padding-top: 12px;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-self: center;
-    }
-
-    .title{
-      font-size: clamp(22px, 2.6vw, 34px);
-      font-weight: 600;
-      letter-spacing: 1.6px;
-      text-transform: uppercase;
-    }
-
-    .logo-box{
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(0,0,0,0.10);
-      padding: 8px 12px;
-      border-radius: 20px;
-      box-shadow: 0 18px 38px rgba(0,0,0,0.30);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      justify-self: end;
-      align-self: start;
-      margin-top: 12px;
-    }
-
-    .logo-box img{
-      height: clamp(34px, 4.4vw, 62px);
-      width: auto;
-      display: block;
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    .quote-pill{
-      display: inline-block;
-      background: var(--glass);
-      border: 1px solid var(--stroke);
-      padding: 18px 34px;
-      border-radius: 30px;
-      margin-top: clamp(16px, 1.8vw, 26px);
-      font-size: clamp(22px, 2.4vw, 36px);
-      font-style: italic;
-      color: rgba(255,255,255,0.92);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 18px 38px rgba(0,0,0,0.42);
-      max-width: min(1100px, calc(100vw - 240px));
-      white-space: normal;
-      line-height: 1.28;
-      text-align: center;
+      padding: 0;
       box-sizing: border-box;
     }
 
-    @media (max-width: 980px){
-      .quote-pill{
-        max-width: calc(100vw - 120px);
-        padding: 16px 22px;
-        border-radius: 26px;
-      }
+    :root {
+      /* Fluid Typography - skaliert automatisch */
+      --fs-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+      --fs-h1: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+      --fs-h2: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+      --fs-h3: clamp(1.25rem, 1rem + 1.25vw, 2rem);
+      --fs-small: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+      
+      /* Fluid Spacing - skaliert mit Viewport */
+      --space-xs: clamp(0.5rem, 0.4rem + 0.5vw, 1rem);
+      --space-sm: clamp(1rem, 0.8rem + 1vw, 2rem);
+      --space-md: clamp(1.5rem, 1rem + 2.5vw, 4rem);
+      --space-lg: clamp(2rem, 1.5rem + 3vw, 5rem);
+      --space-xl: clamp(3rem, 2rem + 5vw, 8rem);
+      
+      /* Container Widths */
+      --container-max: min(90vw, 1400px);
+      --container-narrow: min(85vw, 1200px);
+      
+      /* Colors */
+      --color-primary: #2563eb;
+      --color-secondary: #7c3aed;
+      --color-accent: #f59e0b;
+      --color-text: #1f2937;
+      --color-text-light: #6b7280;
+      --color-bg: #ffffff;
+      --color-bg-alt: #f9fafb;
+      --color-border: #e5e7eb;
+      
+      /* Transitions */
+      --transition-fast: 200ms ease;
+      --transition-base: 300ms ease;
+      --transition-slow: 500ms ease;
     }
 
-    .plan-main{
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 clamp(12px, 3vw, 40px);
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
     }
 
-    .plan-frame{
-      width: min(90vw, 2000px);
-      height: min(62vh, calc(100vh - 420px));
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: var(--fs-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+      overflow-x: hidden;
     }
 
-    #plan-img{
+    img {
       max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      box-shadow: 0 0 50px rgba(0,0,0,0.55);
-      border-radius: 6px;
-      background: rgba(255,255,255,0.06);
+      height: auto;
+      display: block;
     }
 
-    footer{
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding: 0 var(--padX) clamp(10px, 2.2vw, 34px) var(--padX);
-      gap: clamp(10px, 2vw, 26px);
-      flex: 0 0 auto;
-      min-height: 0;
-    }
-
-    .weather-now{
-      background: var(--glass);
-      border: 1px solid var(--stroke);
-      padding: clamp(10px, 1.6vw, 20px) clamp(12px, 1.9vw, 30px);
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      gap: clamp(10px, 1.6vw, 22px);
-      backdrop-filter: blur(10px);
-      width: clamp(240px, 32vw, 430px);
-      flex: 0 0 auto;
-      min-height: 0;
-    }
-
-    .w-icon-big{
-      font-size: clamp(22px, 3.0vw, 52px);
-      width: clamp(30px, 3.6vw, 62px);
-      text-align: center;
-      flex: 0 0 auto;
-      line-height: 1;
-    }
-
-    .w-temp-big{
-      font-size: clamp(40px, 6vw, 86px);
-      font-weight: 400;
-      letter-spacing: -1px;
-      flex: 0 0 auto;
-      white-space: nowrap;
-    }
-
-    .w-info-text{
-      font-size: clamp(12px, 1.5vw, 20px);
-      color: rgba(255,255,255,0.72);
-      line-height: 1.35;
-      min-width: 0;
-    }
-
-    
-
-.w-metrics{
-  margin-top: clamp(6px, 0.8vw, 10px);
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(6px, 0.8vw, 10px);
-}
-
-.wm{
-  font-size: clamp(11px, 1.1vw, 14px);
-  color: rgba(255,255,255,0.70);
-  background: rgba(0,0,0,0.18);
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 6px 10px;
-  border-radius: 999px;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.wm-k{
-  color: rgba(255,255,255,0.55);
-  font-weight: 600;
-  margin-right: 6px;
-}
-
-.fc-hi{
-  font-size: clamp(14px, 1.9vw, 24px);
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.fc-lo{
-  font-size: clamp(12px, 1.5vw, 18px);
-  font-weight: 600;
-  color: rgba(255,255,255,0.65);
-  margin-top: 2px;
-  line-height: 1.1;
-}
-.fc-temps{
-  font-size: clamp(13px, 1.7vw, 22px);
-  font-weight: 700;
-  line-height: 1.1;
-  margin-top: 6px;
-  white-space: nowrap;
-}
-
-.forecast-grid{
-      display: flex;
-      gap: clamp(8px, 1.4vw, 14px);
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: flex-end;
+    /* ==================== LAYOUT CONTAINERS ==================== */
+    .container {
+      width: var(--container-max);
       margin-left: auto;
       margin-right: auto;
-      max-width: 62vw;
-      min-width: 0;
+      padding-left: var(--space-sm);
+      padding-right: var(--space-sm);
     }
 
-    .fc-item{
-      background: var(--glass2);
-      border: 1px solid var(--stroke2);
-      border-radius: 24px;
-      width: clamp(72px, 8.2vw, 118px);
-      padding: clamp(9px, 1.1vw, 14px) clamp(8px, 1vw, 10px);
-      text-align: center;
-      backdrop-filter: blur(10px);
-      flex: 0 1 auto;
-      min-width: 0;
+    .container-narrow {
+      width: var(--container-narrow);
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: var(--space-sm);
+      padding-right: var(--space-sm);
     }
 
-    .fc-day{
-      font-size: clamp(11px, 1.1vw, 14px);
-      font-weight: 600;
-      color: rgba(255,255,255,0.52);
-      margin-bottom: clamp(6px, 0.8vw, 12px);
-      letter-spacing: 0.8px;
+    /* ==================== HEADER ==================== */
+    .header {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+      color: white;
+      padding: var(--space-md) 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .fc-icon{
-      font-size: clamp(18px, 2.4vw, 34px);
-      margin-bottom: clamp(6px, 0.9vw, 10px);
-      line-height: 1;
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
     }
 
-    .fc-temp{
-      font-size: clamp(14px, 1.9vw, 24px);
-      font-weight: 600;
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .logo {
+      width: clamp(120px, 15vw, 200px);
+      height: auto;
+      object-fit: contain;
+    }
+
+    .site-title {
+      font-size: var(--fs-h1);
+      font-weight: 700;
+      letter-spacing: -0.02em;
       line-height: 1.1;
     }
 
-    .footer-spacer{
-      width: clamp(300px, 34vw, 430px);
-      flex: 0 0 auto;
-      visibility: hidden;
+    /* ==================== HERO SECTION ==================== */
+    .hero {
+      background: var(--color-bg-alt);
+      padding: var(--space-xl) 0;
+      text-align: center;
     }
 
-    @media (max-width: 900px){
-      footer{ padding-bottom: clamp(16px, 3vw, 40px); }
-      .weather-now{ width: 100%; }
-      .forecast-grid{
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        align-content: flex-end;
-        max-width: 62vw;
+    .hero-title {
+      font-size: var(--fs-h1);
+      font-weight: 800;
+      margin-bottom: var(--space-sm);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: var(--fs-h3);
+      color: var(--color-text-light);
+      max-width: 60ch;
+      margin: 0 auto;
+    }
+
+    /* ==================== CARDS GRID ==================== */
+    .cards-section {
+      padding: var(--space-xl) 0;
+    }
+
+    .section-title {
+      font-size: var(--fs-h2);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: var(--space-lg);
+      color: var(--color-text);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+      gap: var(--space-md);
+      width: 100%;
+    }
+
+    .card {
+      background: white;
+      border-radius: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+      padding: var(--space-md);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: all var(--transition-base);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    .card:hover {
+      transform: translateY(-0.5rem);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-icon {
+      width: clamp(3rem, 5vw, 5rem);
+      height: clamp(3rem, 5vw, 5rem);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-title {
+      font-size: var(--fs-h3);
+      font-weight: 600;
+      text-align: center;
+      color: var(--color-text);
+    }
+
+    .card-text {
+      font-size: var(--fs-base);
+      color: var(--color-text-light);
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+      border-radius: clamp(0.5rem, 0.4rem + 0.5vw, 1rem);
+      margin-top: auto;
+    }
+
+    /* ==================== FOOTER ==================== */
+    .footer {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      color: white;
+      padding: var(--space-lg) 0 var(--space-md);
+      margin-top: var(--space-xl);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .footer-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xs);
+      transition: transform var(--transition-fast);
+    }
+
+    .footer-item:hover {
+      transform: scale(1.1);
+    }
+
+    .footer-icon {
+      width: clamp(2rem, 3vw, 3rem);
+      height: clamp(2rem, 3vw, 3rem);
+    }
+
+    .footer-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .footer-text {
+      font-size: var(--fs-small);
+      text-align: center;
+    }
+
+    .footer-copyright {
+      text-align: center;
+      padding-top: var(--space-md);
+      margin-top: var(--space-md);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: var(--fs-small);
+      opacity: 0.7;
+    }
+
+    /* ==================== RESPONSIVE BREAKPOINTS ==================== */
+    
+    /* Desktop (>1200px) - Standard-Styles oben */
+    
+    /* Tablet (768px - 1200px) */
+    @media (max-width: 1200px) {
+      :root {
+        --container-max: 95vw;
       }
-      .plan-frame{ height: min(62vh, calc(100vh - 360px)); }
+      
+      .header-content {
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+      }
+    }
+    
+    /* Mobile (480px - 768px) */
+    @media (max-width: 768px) {
+      :root {
+        --space-md: clamp(1rem, 0.5rem + 2vw, 2rem);
+        --space-lg: clamp(1.5rem, 0.8rem + 2.5vw, 3rem);
+        --space-xl: clamp(2rem, 1rem + 3vw, 4rem);
+      }
+      
+      .header {
+        padding: var(--space-sm) 0;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: var(--space-xs);
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+      
+      .footer-content {
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+    }
+    
+    /* Small Mobile (<480px) */
+    @media (max-width: 480px) {
+      :root {
+        --fs-base: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+        --fs-h1: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+        --fs-h2: clamp(1.35rem, 1rem + 1.5vw, 2rem);
+        --fs-h3: clamp(1.15rem, 0.9rem + 1.25vw, 1.75rem);
+        --space-xs: clamp(0.375rem, 0.3rem + 0.375vw, 0.75rem);
+        --space-sm: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
+      }
+      
+      .container, .container-narrow {
+        width: 95vw;
+        padding-left: var(--space-xs);
+        padding-right: var(--space-xs);
+      }
+      
+      .logo {
+        width: clamp(100px, 20vw, 150px);
+      }
+      
+      .card {
+        padding: var(--space-sm);
+      }
+      
+      .card-icon {
+        width: clamp(2.5rem, 6vw, 4rem);
+        height: clamp(2.5rem, 6vw, 4rem);
+      }
     }
 
-    @media (max-height: 820px){
-      .plan-frame{ height: min(54vh, calc(100vh - 400px)); }
-      footer{ padding-bottom: 10px; }
-      .weather-now{ padding: 10px 14px; border-radius: 26px; }
-      .fc-item{ border-radius: 20px; }
-    }
+    /* ==================== UTILITY CLASSES ==================== */
+    .text-center { text-align: center; }
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .mt-lg { margin-top: var(--space-lg); }
+    .mb-sm { margin-bottom: var(--space-sm); }
+    .mb-md { margin-bottom: var(--space-md); }
+    .mb-lg { margin-bottom: var(--space-lg); }
 
-    @media (max-width: 760px){
-      .fc-item:nth-child(n+5){ display: none; }
-    }
-
-    #build{
-      position: fixed;
-      right: 12px;
-      bottom: 8px;
-      font-size: 12px;
-      color: rgba(255,255,255,0.35);
-      z-index: 9999;
-      user-select: none;
-      white-space: nowrap;
-    }
-  
-</style>
+  </style>
 </head>
-
 <body>
-  <div id="bgA" class="bg-layer is-on"></div>
-  <div id="bgB" class="bg-layer"></div>
-  <div class="bg-overlay"></div>
 
-  <div class="layout">
-    <header>
-      <div class="clock-area">
-        <div class="clock" id="clock">--:--</div>
-        <div class="date" id="date">Lade …</div>
-      </div>
-
-      <div class="header-center">
-        <div class="title">ZITAT DES TAGES</div>
-        <div class="quote-pill" id="quote">„Lade Zitat …“</div>
-      </div>
-
-      <div class="logo-box">
-        <img alt="DRK Logo" src="drk-logo.png">
-      </div>
-    </header>
-
-    <div class="plan-main">
-      <div class="plan-frame">
-        <img id="plan-img" src="Speiseplan.jpg" alt="Speiseplan nicht gefunden" />
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo-container">
+          <svg class="logo" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="50" fill="white" rx="8"/>
+            <text x="100" y="32" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#2563eb">LOGO</text>
+          </svg>
+        </div>
+        <h1 class="site-title">Responsive Design</h1>
       </div>
     </div>
+  </header>
 
-    <footer>
-      <div class="weather-now">
-        <div class="w-icon-big" id="main-icon">--</div>
-        <div class="w-temp-big" id="main-temp">--°</div>
-        <div class="w-info-text">
-          Ludwigshafen<br>
-          <span id="main-desc">Wetter wird geladen …</span>
-          <div class="w-metrics">
-            <div class="wm"><span class="wm-k">Gefühlt</span><span id="main-feels">--°</span></div>
-            <div class="wm"><span class="wm-k">Wind</span><span id="main-wind">-- km/h</span></div>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="container-narrow">
+      <h2 class="hero-title">Pixel-Perfect Responsive Template</h2>
+      <p class="hero-subtitle">Alle Elemente skalieren flüssig mit dem Viewport. Teste durch Vergrößern/Verkleinern des Browsers!</p>
+    </div>
+  </section>
+
+  <!-- CARDS SECTION -->
+  <section class="cards-section">
+    <div class="container">
+      <h2 class="section-title">Unsere Features</h2>
+      
+      <div class="cards-grid">
+        <!-- Card 1 -->
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="#dbeafe"/>
+              <path d="M32 16L40 28H24L32 16Z" fill="#2563eb"/>
+              <rect x="24" y="28" width="16" height="20" fill="#2563eb"/>
+            </svg>
           </div>
-        </div>
+          <h3 class="card-title">Fluid Typography</h3>
+          <p class="card-text">Schriftgrößen skalieren automatisch mit clamp() zwischen allen Breakpoints für perfekte Lesbarkeit.</p>
+          <svg class="card-image" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="200" fill="#f3f4f6"/>
+            <text x="150" y="100" font-family="Arial" font-size="20" text-anchor="middle" fill="#6b7280">Bild 1</text>
+          </svg>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="#ddd6fe"/>
+              <rect x="16" y="20" width="32" height="24" rx="4" fill="#7c3aed"/>
+              <circle cx="22" cy="26" r="2" fill="white"/>
+              <circle cx="32" cy="26" r="2" fill="white"/>
+              <circle cx="42" cy="26" r="2" fill="white"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Flexible Grid</h3>
+          <p class="card-text">CSS Grid mit auto-fit und minmax passt die Anzahl der Spalten automatisch an die Viewport-Breite an.</p>
+          <svg class="card-image" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="200" fill="#fef3c7"/>
+            <text x="150" y="100" font-family="Arial" font-size="20" text-anchor="middle" fill="#92400e">Bild 2</text>
+          </svg>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="#fed7aa"/>
+              <path d="M32 44C38.6274 44 44 38.6274 44 32C44 25.3726 38.6274 20 32 20C25.3726 20 20 25.3726 20 32C20 38.6274 25.3726 44 32 44Z" fill="#f59e0b"/>
+              <circle cx="32" cy="32" r="4" fill="white"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Smart Spacing</h3>
+          <p class="card-text">Abstände nutzen CSS Custom Properties mit clamp() für konsistente, proportionale Skalierung.</p>
+          <svg class="card-image" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="200" fill="#fecaca"/>
+            <text x="150" y="100" font-family="Arial" font-size="20" text-anchor="middle" fill="#991b1b">Bild 3</text>
+          </svg>
+        </article>
       </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        
+        <div class="footer-item">
+          <div class="footer-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="28" fill="white"/>
+              <path d="M32 20V32L40 40" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="footer-text">Schnell</p>
+        </div>
+
+        <div class="footer-item">
+          <div class="footer-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="18" y="18" width="28" height="28" rx="4" fill="white"/>
+              <path d="M26 32L30 36L38 28" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="footer-text">Zuverlässig</p>
+        </div>
+
+        <div class="footer-item">
+          <div class="footer-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 16L20 24V40C20 45 26 48 32 48C38 48 44 45 44 40V24L32 16Z" fill="white"/>
+            </svg>
+          </div>
+          <p class="footer-text">Sicher</p>
+        </div>
+
+        <div class="footer-item">
+          <div class="footer-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="26" r="8" fill="white"/>
+              <path d="M20 44C20 36 25 32 32 32C39 32 44 36 44 44" fill="white"/>
+            </svg>
+          </div>
+          <p class="footer-text">Benutzerfreundlich</p>
+        </div>
+
+      </div>
+      
+      <div class="footer-copyright">
+        &copy; 2026 Responsive Design Template | Alle Rechte vorbehalten
+      </div>
+    </div>
+  </footer>
 
-      <div class="forecast-grid" id="forecast-area"></div>
-
-      <div class="footer-spacer" aria-hidden="true"></div>
-    </footer>
-  </div>
-
-  <div id="build">BUILD: 1.4.9</div>
-
-  <script>
-    const params = new URLSearchParams(location.search);
-
-    const isTest = (params.get("test") === "1");
-    const bgSrc  = (params.get("bgsrc") || "local").toLowerCase();
-    const bgSec  = isTest ? Number(params.get("bgsec") || "0") : 0;
-    const qSec   = isTest ? Number(params.get("qsec")  || "0") : 0;
-
-    const LAT = 49.48;
-    const LON = 8.43;
-    const TZ  = "Europe%2FBerlin";
-
-    let lastWeatherKey = null;
-    let lastSeason = null;
-    let lastGroup = null;
-    let lastIsDay = null;
-    let bgList = [];
-    let activeLayer = "A";
-
-    function updateClock(){
-      const d = new Date();
-      document.getElementById("clock").innerText =
-        d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-      document.getElementById("date").innerText =
-        d.toLocaleDateString("de-DE", { weekday: "long", day: "2-digit", month: "long" });
-    }
-
-    function seasonFromDate(d){
-      const m = d.getMonth() + 1;
-      if (m === 12 || m === 1 || m === 2) return "winter";
-      if (m === 3  || m === 4 || m === 5) return "spring";
-      if (m === 6  || m === 7 || m === 8) return "summer";
-      return "autumn";
-    }
-
-    function weatherGroupFromCode(code){
-      const c = Number(code);
-      if (c === 0 || c === 1) return "clear";
-      if (c === 2 || c === 3) return "partly";
-      if (c === 45 || c === 48) return "fog";
-      if (c >= 51 && c <= 67) return "rain";
-      if (c >= 71 && c <= 77) return "snow";
-      if (c >= 80 && c <= 82) return "rain";
-      if (c >= 95 && c <= 99) return "thunder";
-      return "cloudy";
-    }
-
-    function getWeatherIcon(code, isDay){
-      const g = weatherGroupFromCode(code);
-      const day = (typeof isDay === "undefined") ? true : !!isDay;
-
-      if (g === "clear") return day ? "☀️" : "🌙";
-      if (g === "partly") return day ? "⛅" : "🌙☁️";
-      if (g === "cloudy") return "☁️";
-      if (g === "fog") return "🌫️";
-      if (g === "rain") return "🌧️";
-      if (g === "snow") return "❄️";
-      if (g === "thunder") return "⛈️";
-      return "☁️";
-    }
-
-    function getWeatherText(code, isDay){
-      const c = Number(code);
-      const day = (typeof isDay === "undefined") ? true : !!isDay;
-
-      if (c === 0) return day ? "Sonnig" : "Klar";
-      if (c === 1) return day ? "Meist sonnig" : "Meist klar";
-      if (c === 2) return "Leicht bewölkt";
-      if (c === 3) return "Stark bewölkt";
-      if (c === 45 || c === 48) return "Nebel";
-
-      if (c >= 51 && c <= 57) return "Nieselregen";
-      if (c >= 61 && c <= 67) return "Regen";
-      if (c >= 71 && c <= 77) return "Schnee";
-      if (c >= 80 && c <= 82) return "Regenschauer";
-      if (c >= 95 && c <= 99) return "Gewitter";
-
-      return "Wetter";
-    }
-
-    function localBgCandidates(season, group){
-      const L = {
-        winter: {
-          clear:   ["bg/winter/clear/01.jpg", "bg/winter/clear/02.jpg"],
-          partly:  ["bg/winter/partly/01.jpg"],
-          cloudy:  ["bg/winter/cloudy/01.jpg"],
-          fog:     ["bg/winter/fog/01.jpg"],
-          rain:    ["bg/winter/rain/01.jpg"],
-          snow:    ["bg/winter/snow/01.jpg", "bg/winter/snow/02.jpg"],
-          thunder: ["bg/winter/thunder/01.jpg"]
-        },
-        spring: {
-          clear:   ["bg/spring/clear/01.jpg", "bg/spring/clear/02.jpg"],
-          partly:  ["bg/spring/partly/01.jpg"],
-          cloudy:  ["bg/spring/cloudy/01.jpg"],
-          fog:     ["bg/spring/fog/01.jpg"],
-          rain:    ["bg/spring/rain/01.jpg", "bg/spring/rain/02.jpg"],
-          snow:    ["bg/spring/snow/01.jpg"],
-          thunder: ["bg/spring/thunder/01.jpg"]
-        },
-        summer: {
-          clear:   ["bg/summer/clear/01.jpg", "bg/summer/clear/02.jpg", "bg/summer/clear/03.jpg"],
-          partly:  ["bg/summer/partly/01.jpg"],
-          cloudy:  ["bg/summer/cloudy/01.jpg"],
-          fog:     ["bg/summer/fog/01.jpg"],
-          rain:    ["bg/summer/rain/01.jpg", "bg/summer/rain/02.jpg"],
-          snow:    ["bg/summer/snow/01.jpg"],
-          thunder: ["bg/summer/thunder/01.jpg"]
-        },
-        autumn: {
-          clear:   ["bg/autumn/clear/01.jpg"],
-          partly:  ["bg/autumn/partly/01.jpg"],
-          cloudy:  ["bg/autumn/cloudy/01.jpg", "bg/autumn/cloudy/02.jpg"],
-          fog:     ["bg/autumn/fog/01.jpg"],
-          rain:    ["bg/autumn/rain/01.jpg", "bg/autumn/rain/02.jpg"],
-          snow:    ["bg/autumn/snow/01.jpg"],
-          thunder: ["bg/autumn/thunder/01.jpg"]
-        }
-      };
-
-      const arr = (L[season] && L[season][group]) ? L[season][group] : [];
-      return arr.slice();
-    }
-
-    function isProbablyDay(cw){
-      if (cw && typeof cw.is_day !== "undefined") return Number(cw.is_day) === 1;
-      const h = new Date().getHours();
-      return h >= 7 && h < 19;
-    }
-
-    function gradientForWeather(season, group, isDay){
-      const day = !!isDay;
-
-      const base = {
-        clear:   day ? ["#0b2a6f", "#167bd8"] : ["#061226", "#0b2a55"],
-        partly:  day ? ["#0a2d55", "#5aa4d8"] : ["#07121f", "#243a5a"],
-        cloudy:  day ? ["#0b223a", "#6b7f93"] : ["#070f18", "#2b3440"],
-        fog:     day ? ["#152634", "#9aa7b1"] : ["#0a1117", "#3c4852"],
-        rain:    day ? ["#061c2b", "#2c6a86"] : ["#050a12", "#1c3a4f"],
-        snow:    day ? ["#0c2a3a", "#b7d1e6"] : ["#07121a", "#3e5a70"],
-        thunder: day ? ["#090b1b", "#3d2b7a"] : ["#04040b", "#241745"]
-      };
-
-      const accent = {
-        winter: "rgba(255,255,255,0.18)",
-        spring: "rgba(120,255,170,0.16)",
-        summer: "rgba(255,220,120,0.16)",
-        autumn: "rgba(255,160,90,0.16)"
-      };
-
-      const pair = base[group] || base.cloudy;
-      const glow = accent[season] || "rgba(255,255,255,0.14)";
-
-      return `radial-gradient(circle at 20% 10%, ${glow} 0%, rgba(0,0,0,0) 42%), linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
-    }
-
-    function setBackground(value, mode){
-      const a = document.getElementById("bgA");
-      const b = document.getElementById("bgB");
-
-      const next = (activeLayer === "A") ? b : a;
-      const curr = (activeLayer === "A") ? a : b;
-
-      next.style.backgroundImage = (mode === "raw") ? String(value) : `url("${value}")`;
-      next.classList.add("is-on");
-      curr.classList.remove("is-on");
-
-      activeLayer = (activeLayer === "A") ? "B" : "A";
-    }
-
-    function setBackgroundUrlWithFallback(url, fallbackRawCss){
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => { setBackground(url, "url"); resolve(true); };
-        img.onerror = () => { setBackground(fallbackRawCss, "raw"); resolve(false); };
-        img.src = encodeURI(url) + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
-      });
-    }
-
-    async function pickOneBackground(season, group, isDay){
-      if (bgSrc === "picsum"){
-        setBackground("https://picsum.photos/1920/1080?random=" + Date.now(), "url");
-        return;
-      }
-
-      const grad = gradientForWeather(season, group, isDay);
-
-      if (bgSrc === "gradient"){
-        setBackground(grad, "raw");
-        return;
-      }
-
-      if (!bgList.length){
-        setBackground(grad, "raw");
-        return;
-      }
-
-      const idx = Math.floor(Math.random() * bgList.length);
-      const candidate = bgList[idx];
-      await setBackgroundUrlWithFallback(candidate, grad);
-    }
-
-    function dayIndexUTC(d){
-      const ms = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-      return Math.floor(ms / 86400000);
-    }
-
-    function setDailyQuote(quotes){
-      const idx = Math.abs(dayIndexUTC(new Date())) % quotes.length;
-      document.getElementById("quote").innerText = "„" + quotes[idx] + "“";
-    }
-
-    function startQuoteRotation(quotes, seconds){
-      let i = 0;
-      function show(){
-        document.getElementById("quote").innerText = "„" + quotes[i % quotes.length] + "“";
-        i += 1;
-      }
-      show();
-      setInterval(show, Math.max(1000, seconds * 1000));
-    }
-
-    async function loadQuotes(){
-      try{
-        const res = await fetch("quotes.json?v=" + Date.now(), { cache: "no-store" });
-        const list = await res.json();
-        if (!Array.isArray(list) || !list.length) throw new Error("quotes.json leer");
-        return list;
-      }catch{
-        return ["Heute ist ein guter Tag."];
-      }
-    }
-
-    async function fetchWeather(){
-      try{
-        const url =
-          "https://api.open-meteo.com/v1/forecast" +
-          `?latitude=${LAT}&longitude=${LON}` +
-          "&current_weather=true" +
-          "&daily=weathercode,temperature_2m_max,temperature_2m_min" +
-          `&timezone=${TZ}`;
-
-        const response = await fetch(url, { cache: "no-store" });
-        const data = await response.json();
-        if (!data || !data.current_weather || !data.daily) return;
-
-        const cw = data.current_weather;
-        const season = seasonFromDate(new Date());
-        const group = weatherGroupFromCode(cw.weathercode);
-        const isDay = isProbablyDay(cw);
-        const key = season + "|" + group + "|" + (isDay ? "day" : "night");
-
-        document.getElementById("main-icon").innerText = getWeatherIcon(cw.weathercode, isDay);
-        document.getElementById("main-temp").innerText = Math.round(cw.temperature) + "°";
-        document.getElementById("main-desc").innerText = getWeatherText(cw.weathercode, isDay);
-
-        const tMinToday = (Array.isArray(data.daily.temperature_2m_min) && data.daily.temperature_2m_min.length)
-          ? data.daily.temperature_2m_min[0]
-          : null;
-        const tMaxToday = (Array.isArray(data.daily.temperature_2m_max) && data.daily.temperature_2m_max.length)
-          ? data.daily.temperature_2m_max[0]
-          : null;
-
-        const elFeels = document.getElementById("main-feels");
-        const elWind = document.getElementById("main-wind");
-        // Gefuehlte Temperatur aus hourly.apparent_temperature, passend zur current_weather.time
-        let feels = null;
-        if (data && data.hourly && Array.isArray(data.hourly.time) && Array.isArray(data.hourly.apparent_temperature)) {
-          const timesH = data.hourly.time;
-          const valsH = data.hourly.apparent_temperature;
-          const target = (cw && cw.time) ? new Date(cw.time).getTime() : null;
-
-          if (target !== null) {
-            let bestIdx = -1;
-            let bestDiff = Infinity;
-            for (let i = 0; i < timesH.length; i++) {
-              const ts = new Date(timesH[i]).getTime();
-              if (!Number.isFinite(ts)) continue;
-              const diff = Math.abs(ts - target);
-              if (diff < bestDiff) {
-                bestDiff = diff;
-                bestIdx = i;
-              }
-            }
-            if (bestIdx >= 0) feels = valsH[bestIdx];
-          }
-        }
-
-        if (feels == null && cw && typeof cw.temperature === "number") feels = cw.temperature;
-
-        if (elFeels && feels != null) elFeels.innerText = Math.round(feels) + "°";
-        if (elWind && typeof cw.windspeed === "number") elWind.innerText = Math.round(cw.windspeed) + " km/h";
-
-
-        const times = Array.isArray(data.daily.time) ? data.daily.time : [];
-        const codes = Array.isArray(data.daily.weathercode) ? data.daily.weathercode : [];
-        const tmax  = Array.isArray(data.daily.temperature_2m_max) ? data.daily.temperature_2m_max : [];
-        const tmin  = Array.isArray(data.daily.temperature_2m_min) ? data.daily.temperature_2m_min : [];
-
-        let html = "";
-        for (let i = 0; i < Math.min(5, times.length); i++){
-          const dt = new Date(times[i] + "T00:00:00");
-          const dayLabel = (i === 0)
-            ? "HEUTE"
-            : dt.toLocaleDateString("de-DE", { weekday: "short" }).toUpperCase();
-
-          html += `
-            <div class="fc-item">
-              <div class="fc-day">${dayLabel}</div>
-              <div class="fc-icon">${getWeatherIcon(codes[i], true)}</div>
-              <div class="fc-temps">${Math.round(tmax[i])}° / ${((tmin[i] != null) ? Math.round(tmin[i]) : "--")}°</div>
-            </div>
-          `;
-        }
-        document.getElementById("forecast-area").innerHTML = html;
-
-        lastSeason = season;
-        lastGroup = group;
-        lastIsDay = isDay;
-
-        if (key !== lastWeatherKey){
-          lastWeatherKey = key;
-          bgList = localBgCandidates(season, group);
-          await pickOneBackground(season, group, isDay);
-        }
-      }catch(e){
-        console.log("Wetter Fehler", e);
-      }
-    }
-
-    function pickPlanByTime(now = new Date()){
-      const m = now.getHours() * 60 + now.getMinutes();
-
-      const SLOTS = [
-        { start: "07:30", end: "08:30", file: "Frühstück.jpg" },
-        { start: "11:45", end: "13:00", file: "Mittagessen.jpg" },
-        { start: "14:30", end: "15:30", file: "Nachmittagskaffee.jpg" },
-        { start: "17:30", end: "19:00", file: "Abendbrot.jpg" }
-      ];
-
-      function toMin(t){
-        const parts = String(t).split(":");
-        const hh = Number(parts[0] || 0);
-        const mm = Number(parts[1] || 0);
-        return hh * 60 + mm;
-      }
-
-      for (const s of SLOTS){
-        const a = toMin(s.start);
-        const b = toMin(s.end);
-        if (m >= a && m < b) return s.file;
-      }
-      return "Speiseplan.jpg";
-    }
-
-    function setPlanImageWithFallback(imgEl, file){
-      const candidates = (String(file).startsWith("Frühstück"))
-        ? ["Frühstück.jpg", "Fruehstueck.jpg"]
-        : [file];
-
-      let i = 0;
-      function tryNext(){
-        const f = candidates[i];
-        const url = encodeURI(f) + "?v=" + Date.now();
-        imgEl.onerror = () => {
-          imgEl.onerror = null;
-          i += 1;
-          if (i < candidates.length) tryNext();
-        };
-        imgEl.src = url;
-      }
-      tryNext();
-    }
-
-    function startPlanScheduler(){
-      const img = document.getElementById("plan-img");
-let lastFile = null;
-
-      function update(force){
-        const file = pickPlanByTime(new Date());
-        if (!force && file === lastFile) return;
-        setPlanImageWithFallback(img, file);
-        lastFile = file;
-}
-
-      update(true);
-      setInterval(() => update(false), 10 * 1000);
-
-      window.addEventListener("focus", () => update(true));
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) update(true);
-      });
-    }
-
-    function startBackgroundTestRotation(){
-      if (!(bgSec && bgSec > 0 && bgSrc === "picsum")) return;
-      setInterval(() => {
-        const s = lastSeason || seasonFromDate(new Date());
-        const g = lastGroup  || "clear";
-        const d = (typeof lastIsDay === "boolean") ? lastIsDay : true;
-        pickOneBackground(s, g, d);
-      }, Math.max(1000, bgSec * 1000));
-    }
-
-    function startQuotes(){
-      const demoQuote = params.get("demoquote");
-      if (demoQuote === "1"){
-        document.getElementById("quote").innerText =
-          "„Heute zählt ein freundliches Wort, ein offenes Ohr und ein kleines Zeichen von Respekt.“";
-        return;
-      }
-
-      loadQuotes().then((quotes) => {
-        if (qSec && qSec > 0) startQuoteRotation(quotes, qSec);
-        else setDailyQuote(quotes);
-      });
-    }
-
-    (function autoPeriodicReload(){
-      const hours = 6;
-      setInterval(() => location.reload(), hours * 60 * 60 * 1000);
-    })();
-
-    (function autoDailyReload(){
-      function schedule(){
-        const now = new Date();
-        const next = new Date(now);
-        next.setHours(3, 10, 0, 0);
-        if (next <= now) next.setDate(next.getDate() + 1);
-        setTimeout(() => location.reload(), next - now);
-      }
-      schedule();
-    })();
-
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    startPlanScheduler();
-    startQuotes();
-
-    fetchWeather();
-    setInterval(fetchWeather, 5 * 60 * 1000);
-
-    startBackgroundTestRotation();
-  </script>
-<!-- WATCHDOG START -->
-<script>
-(() => {
-  let lastBeat = Date.now();
-
-  // Herzschlag: wenn JS normal läuft, wird das regelmäßig aktualisiert
-  setInterval(() => { lastBeat = Date.now(); }, 5000);
-
-  // Wenn Timer/JS hängen: Seite neu laden
-  setInterval(() => {
-    if (Date.now() - lastBeat > 90000) {
-      const u = new URL(location.href);
-      u.searchParams.set("r", String(Date.now()));
-      location.replace(u.toString());
-    }
-  }, 15000);
-
-  // nachts einmal leise neu laden (optional, meist merkt das niemand)
-  const nightly = () => {
-    const d = new Date();
-    const t = new Date(d);
-    t.setHours(3, 17, 0, 0);
-    if (t.getTime() <= d.getTime()) t.setDate(t.getDate() + 1);
-    setTimeout(() => {
-      const u = new URL(location.href);
-      u.searchParams.set("r", String(Date.now()));
-      location.replace(u.toString());
-    }, t.getTime() - d.getTime());
-  };
-  nightly();
-})();
-</script>
-<!-- WATCHDOG END -->
 </body>
 </html>
