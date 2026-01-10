@@ -8,13 +8,11 @@
     :root{
       --padX: clamp(18px, 4vw, 60px);
       --padY: clamp(14px, 2.2vw, 26px);
-
       --glass: rgba(255,255,255,0.10);
       --glass2: rgba(255,255,255,0.08);
       --stroke: rgba(255,255,255,0.14);
       --stroke2: rgba(255,255,255,0.18);
     }
-
     html, body { height: 100%; }
     body{
       margin: 0;
@@ -24,7 +22,6 @@
       overflow: hidden;
       background: #000;
     }
-
     .bg-layer{
       position: fixed;
       inset: 0;
@@ -39,63 +36,64 @@
       z-index: -3;
     }
     .bg-layer.is-on{ opacity: 1; }
-
     @keyframes bgMove{
       from{ transform: scale(1.03) translate3d(0,0,0); }
       to{ transform: scale(1.08) translate3d(14px,-10px,0); }
     }
-
     .bg-overlay{
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(circle at 50% 40%,
-          rgba(0,0,0,0.10) 0%,
-          rgba(0,0,0,0.35) 55%,
-          rgba(0,0,0,0.55) 100%);
+      background: radial-gradient(circle at 50% 40%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.55) 100%);
       z-index: -2;
     }
-
     .layout{
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
-
     header{
       display: grid;
-      grid-template-columns: minmax(320px, 1fr) auto minmax(320px, 1fr);
+      grid-template-columns: minmax(280px, 1fr) auto minmax(280px, 1fr);
       align-items: flex-start;
       padding: calc(var(--padY) + 10px) var(--padX) 18px var(--padX);
       gap: clamp(10px, 2vw, 20px);
     }
-
-    .clock-area { text-align: left; min-width: min(320px, 34vw); padding-top: 6px; justify-self: start; }
-    .clock{ font-size: clamp(44px, 6vw, 80px); font-weight: 600; line-height: 1; }
-    .date{ font-size: clamp(16px, 2vw, 26px); color: rgba(255,255,255,0.70); margin-top: 8px; }
-
+    .clock-area { 
+      text-align: left; 
+      min-width: 0;
+      padding-top: 6px; 
+      justify-self: start; 
+    }
+    .clock{ 
+      font-size: clamp(32px, 5vw, 80px); 
+      font-weight: 600; 
+      line-height: 1; 
+    }
+    .date{ 
+      font-size: clamp(14px, 1.8vw, 26px); 
+      color: rgba(255,255,255,0.70); 
+      margin-top: clamp(4px, 0.6vw, 8px); 
+    }
     .header-center{
       text-align: center;
-      padding-top: 12px;
+      padding-top: clamp(6px, 1vw, 12px);
       min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-self: center;
     }
-
     .title{
-      font-size: clamp(22px, 2.6vw, 34px);
+      font-size: clamp(18px, 2.2vw, 34px);
       font-weight: 600;
-      letter-spacing: 1.6px;
+      letter-spacing: clamp(1px, 0.12vw, 1.6px);
       text-transform: uppercase;
     }
-
     .logo-box{
       background: rgba(255,255,255,0.78);
       border: 1px solid rgba(0,0,0,0.10);
-      padding: 8px 12px;
-      border-radius: 20px;
+      padding: clamp(6px, 0.8vw, 12px) clamp(8px, 1vw, 12px);
+      border-radius: clamp(14px, 1.6vw, 20px);
       box-shadow: 0 18px 38px rgba(0,0,0,0.30);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -104,44 +102,33 @@
       justify-content: center;
       justify-self: end;
       align-self: start;
-      margin-top: 12px;
+      margin-top: clamp(6px, 1vw, 12px);
     }
-
     .logo-box img{
-      height: clamp(34px, 4.4vw, 62px);
+      height: clamp(28px, 3.8vw, 62px);
       width: auto;
       display: block;
       border-radius: 0;
       box-shadow: none;
     }
-
     .quote-pill{
       display: inline-block;
       background: var(--glass);
       border: 1px solid var(--stroke);
-      padding: 18px 34px;
-      border-radius: 30px;
-      margin-top: clamp(16px, 1.8vw, 26px);
-      font-size: clamp(22px, 2.4vw, 36px);
+      padding: clamp(12px, 1.8vw, 34px) clamp(18px, 2.8vw, 34px);
+      border-radius: clamp(20px, 2.4vw, 30px);
+      margin-top: clamp(12px, 1.5vw, 26px);
+      font-size: clamp(16px, 2vw, 36px);
       font-style: italic;
       color: rgba(255,255,255,0.92);
       backdrop-filter: blur(10px);
       box-shadow: 0 18px 38px rgba(0,0,0,0.42);
-      max-width: min(1100px, calc(100vw - 240px));
+      max-width: min(90vw, 1100px);
       white-space: normal;
-      line-height: 1.28;
+      line-height: 1.32;
       text-align: center;
       box-sizing: border-box;
     }
-
-    @media (max-width: 980px){
-      .quote-pill{
-        max-width: calc(100vw - 120px);
-        padding: 16px 22px;
-        border-radius: 26px;
-      }
-    }
-
     .plan-main{
       flex: 1;
       min-height: 0;
@@ -150,7 +137,6 @@
       align-items: center;
       padding: 0 clamp(12px, 3vw, 40px);
     }
-
     .plan-frame{
       width: min(90vw, 2000px);
       height: min(62vh, calc(100vh - 420px));
@@ -158,16 +144,14 @@
       justify-content: center;
       align-items: center;
     }
-
     #plan-img{
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       box-shadow: 0 0 50px rgba(0,0,0,0.55);
-      border-radius: 6px;
+      border-radius: clamp(4px, 0.5vw, 6px);
       background: rgba(255,255,255,0.06);
     }
-
     footer{
       display: flex;
       justify-content: space-between;
@@ -177,94 +161,64 @@
       flex: 0 0 auto;
       min-height: 0;
     }
-
     .weather-now{
       background: var(--glass);
       border: 1px solid var(--stroke);
-      padding: clamp(10px, 1.6vw, 20px) clamp(12px, 1.9vw, 30px);
-      border-radius: 30px;
+      padding: clamp(10px, 1.5vw, 20px) clamp(12px, 1.8vw, 30px);
+      border-radius: clamp(20px, 2.4vw, 30px);
       display: flex;
       align-items: center;
-      gap: clamp(10px, 1.6vw, 22px);
+      gap: clamp(8px, 1.4vw, 22px);
       backdrop-filter: blur(10px);
-      width: clamp(240px, 32vw, 430px);
+      min-width: clamp(220px, 28vw, 430px);
+      max-width: clamp(280px, 32vw, 430px);
       flex: 0 0 auto;
-      min-height: 0;
     }
-
     .w-icon-big{
-      font-size: clamp(22px, 3.0vw, 52px);
-      width: clamp(30px, 3.6vw, 62px);
+      font-size: clamp(28px, 3.8vw, 52px);
+      min-width: clamp(32px, 4vw, 62px);
       text-align: center;
       flex: 0 0 auto;
       line-height: 1;
     }
-
     .w-temp-big{
-      font-size: clamp(40px, 6vw, 86px);
+      font-size: clamp(36px, 5.2vw, 86px);
       font-weight: 400;
       letter-spacing: -1px;
       flex: 0 0 auto;
       white-space: nowrap;
     }
-
     .w-info-text{
-      font-size: clamp(12px, 1.5vw, 20px);
+      font-size: clamp(11px, 1.4vw, 20px);
       color: rgba(255,255,255,0.72);
       line-height: 1.35;
       min-width: 0;
+      flex: 1;
     }
-
-    
-
-.w-metrics{
-  margin-top: clamp(6px, 0.8vw, 10px);
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(6px, 0.8vw, 10px);
-}
-
-.wm{
-  font-size: clamp(11px, 1.1vw, 14px);
-  color: rgba(255,255,255,0.70);
-  background: rgba(0,0,0,0.18);
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 6px 10px;
-  border-radius: 999px;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.wm-k{
-  color: rgba(255,255,255,0.55);
-  font-weight: 600;
-  margin-right: 6px;
-}
-
-.fc-hi{
-  font-size: clamp(14px, 1.9vw, 24px);
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.fc-lo{
-  font-size: clamp(12px, 1.5vw, 18px);
-  font-weight: 600;
-  color: rgba(255,255,255,0.65);
-  margin-top: 2px;
-  line-height: 1.1;
-}
-.fc-temps{
-  font-size: clamp(13px, 1.7vw, 22px);
-  font-weight: 700;
-  line-height: 1.1;
-  margin-top: 6px;
-  white-space: nowrap;
-}
-
-.forecast-grid{
+    .w-metrics{
+      margin-top: clamp(5px, 0.7vw, 10px);
       display: flex;
-      gap: clamp(8px, 1.4vw, 14px);
+      flex-wrap: wrap;
+      gap: clamp(5px, 0.7vw, 10px);
+    }
+    .wm{
+      font-size: clamp(10px, 1vw, 14px);
+      color: rgba(255,255,255,0.70);
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: clamp(4px, 0.6vw, 6px) clamp(7px, 0.9vw, 10px);
+      border-radius: 999px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .wm-k{
+      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+      margin-right: clamp(4px, 0.5vw, 6px);
+    }
+    .forecast-grid{
+      display: flex;
+      gap: clamp(6px, 1.2vw, 14px);
       flex-wrap: nowrap;
       justify-content: center;
       align-items: flex-end;
@@ -273,110 +227,113 @@
       max-width: 62vw;
       min-width: 0;
     }
-
     .fc-item{
       background: var(--glass2);
       border: 1px solid var(--stroke2);
-      border-radius: 24px;
-      width: clamp(72px, 8.2vw, 118px);
-      padding: clamp(9px, 1.1vw, 14px) clamp(8px, 1vw, 10px);
+      border-radius: clamp(16px, 2vw, 24px);
+      aspect-ratio: 1;
+      width: clamp(60px, 7.5vw, 118px);
+      padding: clamp(8px, 1vw, 14px);
       text-align: center;
       backdrop-filter: blur(10px);
-      flex: 0 1 auto;
-      min-width: 0;
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
     }
-
     .fc-day{
-      font-size: clamp(11px, 1.1vw, 14px);
+      font-size: clamp(9px, 1vw, 14px);
       font-weight: 600;
       color: rgba(255,255,255,0.52);
-      margin-bottom: clamp(6px, 0.8vw, 12px);
-      letter-spacing: 0.8px;
-    }
-
-    .fc-icon{
-      font-size: clamp(18px, 2.4vw, 34px);
-      margin-bottom: clamp(6px, 0.9vw, 10px);
-      line-height: 1;
-    }
-
-    .fc-temp{
-      font-size: clamp(14px, 1.9vw, 24px);
-      font-weight: 600;
+      letter-spacing: clamp(0.4px, 0.06vw, 0.8px);
       line-height: 1.1;
     }
-
+    .fc-icon{
+      font-size: clamp(20px, 2.6vw, 34px);
+      line-height: 1;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fc-temps{
+      font-size: clamp(11px, 1.5vw, 22px);
+      font-weight: 700;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
     .footer-spacer{
-      width: clamp(300px, 34vw, 430px);
+      width: clamp(220px, 28vw, 430px);
       flex: 0 0 auto;
       visibility: hidden;
     }
-
+    @media (max-width: 1400px){
+      header{ grid-template-columns: minmax(240px, 1fr) auto minmax(240px, 1fr); }
+    }
+    @media (max-width: 1200px){
+      .forecast-grid{ max-width: 70vw; }
+      .fc-item{ width: clamp(55px, 8vw, 100px); }
+    }
     @media (max-width: 900px){
-      footer{ padding-bottom: clamp(16px, 3vw, 40px); }
-      .weather-now{ width: 100%; }
-      .forecast-grid{
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        align-content: flex-end;
-        max-width: 62vw;
-      }
-      .plan-frame{ height: min(62vh, calc(100vh - 360px)); }
+      header{ grid-template-columns: 1fr; text-align: center; gap: clamp(8px, 1.5vw, 16px); }
+      .clock-area{ text-align: center; justify-self: center; }
+      .logo-box{ justify-self: center; margin-top: clamp(8px, 1.2vw, 16px); }
+      footer{ flex-direction: column; align-items: center; gap: clamp(12px, 2vw, 20px); padding-bottom: clamp(16px, 3vw, 40px); }
+      .weather-now{ width: 100%; max-width: 90vw; }
+      .forecast-grid{ width: 100%; max-width: 90vw; justify-content: space-around; }
+      .footer-spacer{ display: none; }
+      .plan-frame{ height: min(55vh, calc(100vh - 360px)); }
     }
-
+    @media (max-width: 600px){
+      .fc-item:nth-child(n+5){ display: none; }
+      .forecast-grid{ gap: clamp(8px, 2vw, 12px); }
+      .fc-item{ width: clamp(70px, 18vw, 90px); }
+    }
     @media (max-height: 820px){
-      .plan-frame{ height: min(54vh, calc(100vh - 400px)); }
-      footer{ padding-bottom: 10px; }
-      .weather-now{ padding: 10px 14px; border-radius: 26px; }
-      .fc-item{ border-radius: 20px; }
+      .plan-frame{ height: min(50vh, calc(100vh - 380px)); }
+      footer{ padding-bottom: clamp(8px, 1.5vw, 16px); }
+      .weather-now{ padding: clamp(8px, 1.2vw, 14px); border-radius: clamp(18px, 2vw, 26px); }
+      .fc-item{ border-radius: clamp(14px, 1.8vw, 20px); }
     }
-
+    @media (max-height: 700px){
+      .plan-frame{ height: min(45vh, calc(100vh - 340px)); }
+      header{ padding-top: var(--padY); padding-bottom: clamp(8px, 1.2vw, 14px); }
+    }
     @media (max-width: 760px){
       .fc-item:nth-child(n+5){ display: none; }
     }
-
     #build{
-      position: fixed;
-      right: 12px;
-      bottom: 8px;
-      font-size: 12px;
+      position: fixed; right: 12px; bottom: 8px;
+      font-size: clamp(10px, 1vw, 12px);
       color: rgba(255,255,255,0.35);
-      z-index: 9999;
-      user-select: none;
-      white-space: nowrap;
+      z-index: 9999; user-select: none; white-space: nowrap;
     }
-  
 </style>
 </head>
-
 <body>
   <div id="bgA" class="bg-layer is-on"></div>
   <div id="bgB" class="bg-layer"></div>
   <div class="bg-overlay"></div>
-
   <div class="layout">
     <header>
       <div class="clock-area">
         <div class="clock" id="clock">--:--</div>
         <div class="date" id="date">Lade …</div>
       </div>
-
       <div class="header-center">
         <div class="title">ZITAT DES TAGES</div>
-        <div class="quote-pill" id="quote">„Lade Zitat …“</div>
+        <div class="quote-pill" id="quote">"Lade Zitat …"</div>
       </div>
-
       <div class="logo-box">
         <img alt="DRK Logo" src="drk-logo.png">
       </div>
     </header>
-
     <div class="plan-main">
       <div class="plan-frame">
         <img id="plan-img" src="Speiseplan.jpg" alt="Speiseplan nicht gefunden" />
       </div>
     </div>
-
     <footer>
       <div class="weather-now">
         <div class="w-icon-big" id="main-icon">--</div>
@@ -390,27 +347,19 @@
           </div>
         </div>
       </div>
-
       <div class="forecast-grid" id="forecast-area"></div>
-
       <div class="footer-spacer" aria-hidden="true"></div>
     </footer>
   </div>
-
-  <div id="build">BUILD: 1.4.9</div>
-
-  <script>
-    const params = new URLSearchParams(location.search);
-
+  <div id="build">BUILD: 1.5.0</div>
+  <script>const params = new URLSearchParams(location.search);
     const isTest = (params.get("test") === "1");
     const bgSrc  = (params.get("bgsrc") || "local").toLowerCase();
     const bgSec  = isTest ? Number(params.get("bgsec") || "0") : 0;
     const qSec   = isTest ? Number(params.get("qsec")  || "0") : 0;
-
     const LAT = 49.48;
     const LON = 8.43;
     const TZ  = "Europe%2FBerlin";
-
     let lastWeatherKey = null;
     let lastSeason = null;
     let lastGroup = null;
@@ -420,10 +369,8 @@
 
     function updateClock(){
       const d = new Date();
-      document.getElementById("clock").innerText =
-        d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-      document.getElementById("date").innerText =
-        d.toLocaleDateString("de-DE", { weekday: "long", day: "2-digit", month: "long" });
+      document.getElementById("clock").innerText = d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+      document.getElementById("date").innerText = d.toLocaleDateString("de-DE", { weekday: "long", day: "2-digit", month: "long" });
     }
 
     function seasonFromDate(d){
@@ -449,7 +396,6 @@
     function getWeatherIcon(code, isDay){
       const g = weatherGroupFromCode(code);
       const day = (typeof isDay === "undefined") ? true : !!isDay;
-
       if (g === "clear") return day ? "☀️" : "🌙";
       if (g === "partly") return day ? "⛅" : "🌙☁️";
       if (g === "cloudy") return "☁️";
@@ -463,62 +409,26 @@
     function getWeatherText(code, isDay){
       const c = Number(code);
       const day = (typeof isDay === "undefined") ? true : !!isDay;
-
       if (c === 0) return day ? "Sonnig" : "Klar";
       if (c === 1) return day ? "Meist sonnig" : "Meist klar";
       if (c === 2) return "Leicht bewölkt";
       if (c === 3) return "Stark bewölkt";
       if (c === 45 || c === 48) return "Nebel";
-
       if (c >= 51 && c <= 57) return "Nieselregen";
       if (c >= 61 && c <= 67) return "Regen";
       if (c >= 71 && c <= 77) return "Schnee";
       if (c >= 80 && c <= 82) return "Regenschauer";
       if (c >= 95 && c <= 99) return "Gewitter";
-
       return "Wetter";
     }
 
     function localBgCandidates(season, group){
       const L = {
-        winter: {
-          clear:   ["bg/winter/clear/01.jpg", "bg/winter/clear/02.jpg"],
-          partly:  ["bg/winter/partly/01.jpg"],
-          cloudy:  ["bg/winter/cloudy/01.jpg"],
-          fog:     ["bg/winter/fog/01.jpg"],
-          rain:    ["bg/winter/rain/01.jpg"],
-          snow:    ["bg/winter/snow/01.jpg", "bg/winter/snow/02.jpg"],
-          thunder: ["bg/winter/thunder/01.jpg"]
-        },
-        spring: {
-          clear:   ["bg/spring/clear/01.jpg", "bg/spring/clear/02.jpg"],
-          partly:  ["bg/spring/partly/01.jpg"],
-          cloudy:  ["bg/spring/cloudy/01.jpg"],
-          fog:     ["bg/spring/fog/01.jpg"],
-          rain:    ["bg/spring/rain/01.jpg", "bg/spring/rain/02.jpg"],
-          snow:    ["bg/spring/snow/01.jpg"],
-          thunder: ["bg/spring/thunder/01.jpg"]
-        },
-        summer: {
-          clear:   ["bg/summer/clear/01.jpg", "bg/summer/clear/02.jpg", "bg/summer/clear/03.jpg"],
-          partly:  ["bg/summer/partly/01.jpg"],
-          cloudy:  ["bg/summer/cloudy/01.jpg"],
-          fog:     ["bg/summer/fog/01.jpg"],
-          rain:    ["bg/summer/rain/01.jpg", "bg/summer/rain/02.jpg"],
-          snow:    ["bg/summer/snow/01.jpg"],
-          thunder: ["bg/summer/thunder/01.jpg"]
-        },
-        autumn: {
-          clear:   ["bg/autumn/clear/01.jpg"],
-          partly:  ["bg/autumn/partly/01.jpg"],
-          cloudy:  ["bg/autumn/cloudy/01.jpg", "bg/autumn/cloudy/02.jpg"],
-          fog:     ["bg/autumn/fog/01.jpg"],
-          rain:    ["bg/autumn/rain/01.jpg", "bg/autumn/rain/02.jpg"],
-          snow:    ["bg/autumn/snow/01.jpg"],
-          thunder: ["bg/autumn/thunder/01.jpg"]
-        }
+        winter: { clear: ["bg/winter/clear/01.jpg", "bg/winter/clear/02.jpg"], partly: ["bg/winter/partly/01.jpg"], cloudy: ["bg/winter/cloudy/01.jpg"], fog: ["bg/winter/fog/01.jpg"], rain: ["bg/winter/rain/01.jpg"], snow: ["bg/winter/snow/01.jpg", "bg/winter/snow/02.jpg"], thunder: ["bg/winter/thunder/01.jpg"] },
+        spring: { clear: ["bg/spring/clear/01.jpg", "bg/spring/clear/02.jpg"], partly: ["bg/spring/partly/01.jpg"], cloudy: ["bg/spring/cloudy/01.jpg"], fog: ["bg/spring/fog/01.jpg"], rain: ["bg/spring/rain/01.jpg", "bg/spring/rain/02.jpg"], snow: ["bg/spring/snow/01.jpg"], thunder: ["bg/spring/thunder/01.jpg"] },
+        summer: { clear: ["bg/summer/clear/01.jpg", "bg/summer/clear/02.jpg", "bg/summer/clear/03.jpg"], partly: ["bg/summer/partly/01.jpg"], cloudy: ["bg/summer/cloudy/01.jpg"], fog: ["bg/summer/fog/01.jpg"], rain: ["bg/summer/rain/01.jpg", "bg/summer/rain/02.jpg"], snow: ["bg/summer/snow/01.jpg"], thunder: ["bg/summer/thunder/01.jpg"] },
+        autumn: { clear: ["bg/autumn/clear/01.jpg"], partly: ["bg/autumn/partly/01.jpg"], cloudy: ["bg/autumn/cloudy/01.jpg", "bg/autumn/cloudy/02.jpg"], fog: ["bg/autumn/fog/01.jpg"], rain: ["bg/autumn/rain/01.jpg", "bg/autumn/rain/02.jpg"], snow: ["bg/autumn/snow/01.jpg"], thunder: ["bg/autumn/thunder/01.jpg"] }
       };
-
       const arr = (L[season] && L[season][group]) ? L[season][group] : [];
       return arr.slice();
     }
@@ -531,41 +441,29 @@
 
     function gradientForWeather(season, group, isDay){
       const day = !!isDay;
-
       const base = {
-        clear:   day ? ["#0b2a6f", "#167bd8"] : ["#061226", "#0b2a55"],
-        partly:  day ? ["#0a2d55", "#5aa4d8"] : ["#07121f", "#243a5a"],
-        cloudy:  day ? ["#0b223a", "#6b7f93"] : ["#070f18", "#2b3440"],
-        fog:     day ? ["#152634", "#9aa7b1"] : ["#0a1117", "#3c4852"],
-        rain:    day ? ["#061c2b", "#2c6a86"] : ["#050a12", "#1c3a4f"],
-        snow:    day ? ["#0c2a3a", "#b7d1e6"] : ["#07121a", "#3e5a70"],
+        clear: day ? ["#0b2a6f", "#167bd8"] : ["#061226", "#0b2a55"],
+        partly: day ? ["#0a2d55", "#5aa4d8"] : ["#07121f", "#243a5a"],
+        cloudy: day ? ["#0b223a", "#6b7f93"] : ["#070f18", "#2b3440"],
+        fog: day ? ["#152634", "#9aa7b1"] : ["#0a1117", "#3c4852"],
+        rain: day ? ["#061c2b", "#2c6a86"] : ["#050a12", "#1c3a4f"],
+        snow: day ? ["#0c2a3a", "#b7d1e6"] : ["#07121a", "#3e5a70"],
         thunder: day ? ["#090b1b", "#3d2b7a"] : ["#04040b", "#241745"]
       };
-
-      const accent = {
-        winter: "rgba(255,255,255,0.18)",
-        spring: "rgba(120,255,170,0.16)",
-        summer: "rgba(255,220,120,0.16)",
-        autumn: "rgba(255,160,90,0.16)"
-      };
-
+      const accent = { winter: "rgba(255,255,255,0.18)", spring: "rgba(120,255,170,0.16)", summer: "rgba(255,220,120,0.16)", autumn: "rgba(255,160,90,0.16)" };
       const pair = base[group] || base.cloudy;
       const glow = accent[season] || "rgba(255,255,255,0.14)";
-
-      return `radial-gradient(circle at 20% 10%, ${glow} 0%, rgba(0,0,0,0) 42%), linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
+      return `radial-gradient(circle at 20% 10%, ${glow} 0%, rgba(0,0,0,0) 42%), linear-gradient(135deg, ${pair} 0%, ${pair} 100%)`;
     }
 
     function setBackground(value, mode){
       const a = document.getElementById("bgA");
       const b = document.getElementById("bgB");
-
       const next = (activeLayer === "A") ? b : a;
       const curr = (activeLayer === "A") ? a : b;
-
       next.style.backgroundImage = (mode === "raw") ? String(value) : `url("${value}")`;
       next.classList.add("is-on");
       curr.classList.remove("is-on");
-
       activeLayer = (activeLayer === "A") ? "B" : "A";
     }
 
@@ -579,23 +477,10 @@
     }
 
     async function pickOneBackground(season, group, isDay){
-      if (bgSrc === "picsum"){
-        setBackground("https://picsum.photos/1920/1080?random=" + Date.now(), "url");
-        return;
-      }
-
+      if (bgSrc === "picsum"){ setBackground("https://picsum.photos/1920/1080?random=" + Date.now(), "url"); return; }
       const grad = gradientForWeather(season, group, isDay);
-
-      if (bgSrc === "gradient"){
-        setBackground(grad, "raw");
-        return;
-      }
-
-      if (!bgList.length){
-        setBackground(grad, "raw");
-        return;
-      }
-
+      if (bgSrc === "gradient"){ setBackground(grad, "raw"); return; }
+      if (!bgList.length){ setBackground(grad, "raw"); return; }
       const idx = Math.floor(Math.random() * bgList.length);
       const candidate = bgList[idx];
       await setBackgroundUrlWithFallback(candidate, grad);
@@ -608,15 +493,12 @@
 
     function setDailyQuote(quotes){
       const idx = Math.abs(dayIndexUTC(new Date())) % quotes.length;
-      document.getElementById("quote").innerText = "„" + quotes[idx] + "“";
+      document.getElementById("quote").innerText = """ + quotes[idx] + """;
     }
 
     function startQuoteRotation(quotes, seconds){
       let i = 0;
-      function show(){
-        document.getElementById("quote").innerText = "„" + quotes[i % quotes.length] + "“";
-        i += 1;
-      }
+      function show(){ document.getElementById("quote").innerText = """ + quotes[i % quotes.length] + """; i += 1; }
       show();
       setInterval(show, Math.max(1000, seconds * 1000));
     }
@@ -627,147 +509,86 @@
         const list = await res.json();
         if (!Array.isArray(list) || !list.length) throw new Error("quotes.json leer");
         return list;
-      }catch{
-        return ["Heute ist ein guter Tag."];
-      }
+      }catch{ return ["Heute ist ein guter Tag."]; }
     }
 
     async function fetchWeather(){
       try{
-        const url =
-          "https://api.open-meteo.com/v1/forecast" +
-          `?latitude=${LAT}&longitude=${LON}` +
-          "&current_weather=true" +
-          "&daily=weathercode,temperature_2m_max,temperature_2m_min" +
-          `&timezone=${TZ}`;
-
+        const url = "https://api.open-meteo.com/v1/forecast" + `?latitude=${LAT}&longitude=${LON}` + "&current_weather=true" + "&hourly=apparent_temperature" + "&daily=weathercode,temperature_2m_max,temperature_2m_min" + `&timezone=${TZ}`;
         const response = await fetch(url, { cache: "no-store" });
         const data = await response.json();
         if (!data || !data.current_weather || !data.daily) return;
-
         const cw = data.current_weather;
         const season = seasonFromDate(new Date());
         const group = weatherGroupFromCode(cw.weathercode);
         const isDay = isProbablyDay(cw);
         const key = season + "|" + group + "|" + (isDay ? "day" : "night");
-
         document.getElementById("main-icon").innerText = getWeatherIcon(cw.weathercode, isDay);
         document.getElementById("main-temp").innerText = Math.round(cw.temperature) + "°";
         document.getElementById("main-desc").innerText = getWeatherText(cw.weathercode, isDay);
-
-        const tMinToday = (Array.isArray(data.daily.temperature_2m_min) && data.daily.temperature_2m_min.length)
-          ? data.daily.temperature_2m_min[0]
-          : null;
-        const tMaxToday = (Array.isArray(data.daily.temperature_2m_max) && data.daily.temperature_2m_max.length)
-          ? data.daily.temperature_2m_max[0]
-          : null;
-
         const elFeels = document.getElementById("main-feels");
         const elWind = document.getElementById("main-wind");
-        // Gefuehlte Temperatur aus hourly.apparent_temperature, passend zur current_weather.time
         let feels = null;
         if (data && data.hourly && Array.isArray(data.hourly.time) && Array.isArray(data.hourly.apparent_temperature)) {
           const timesH = data.hourly.time;
           const valsH = data.hourly.apparent_temperature;
           const target = (cw && cw.time) ? new Date(cw.time).getTime() : null;
-
           if (target !== null) {
-            let bestIdx = -1;
-            let bestDiff = Infinity;
+            let bestIdx = -1; let bestDiff = Infinity;
             for (let i = 0; i < timesH.length; i++) {
-              const ts = new Date(timesH[i]).getTime();
+              const ts = new Date(timesH).getTime();
               if (!Number.isFinite(ts)) continue;
               const diff = Math.abs(ts - target);
-              if (diff < bestDiff) {
-                bestDiff = diff;
-                bestIdx = i;
-              }
+              if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
             }
             if (bestIdx >= 0) feels = valsH[bestIdx];
           }
         }
-
         if (feels == null && cw && typeof cw.temperature === "number") feels = cw.temperature;
-
         if (elFeels && feels != null) elFeels.innerText = Math.round(feels) + "°";
         if (elWind && typeof cw.windspeed === "number") elWind.innerText = Math.round(cw.windspeed) + " km/h";
-
-
         const times = Array.isArray(data.daily.time) ? data.daily.time : [];
         const codes = Array.isArray(data.daily.weathercode) ? data.daily.weathercode : [];
         const tmax  = Array.isArray(data.daily.temperature_2m_max) ? data.daily.temperature_2m_max : [];
         const tmin  = Array.isArray(data.daily.temperature_2m_min) ? data.daily.temperature_2m_min : [];
-
         let html = "";
         for (let i = 0; i < Math.min(5, times.length); i++){
-          const dt = new Date(times[i] + "T00:00:00");
-          const dayLabel = (i === 0)
-            ? "HEUTE"
-            : dt.toLocaleDateString("de-DE", { weekday: "short" }).toUpperCase();
-
-          html += `
-            <div class="fc-item">
-              <div class="fc-day">${dayLabel}</div>
-              <div class="fc-icon">${getWeatherIcon(codes[i], true)}</div>
-              <div class="fc-temps">${Math.round(tmax[i])}° / ${((tmin[i] != null) ? Math.round(tmin[i]) : "--")}°</div>
-            </div>
-          `;
+          const dt = new Date(times + "T00:00:00");
+          const dayLabel = (i === 0) ? "HEUTE" : dt.toLocaleDateString("de-DE", { weekday: "short" }).toUpperCase();
+          html += `<div class="fc-item"><div class="fc-day">${dayLabel}</div><div class="fc-icon">${getWeatherIcon(codes, true)}</div><div class="fc-temps">${Math.round(tmax)}° / ${((tmin != null) ? Math.round(tmin) : "--")}°</div></div>`;
         }
         document.getElementById("forecast-area").innerHTML = html;
-
         lastSeason = season;
         lastGroup = group;
         lastIsDay = isDay;
-
         if (key !== lastWeatherKey){
           lastWeatherKey = key;
           bgList = localBgCandidates(season, group);
           await pickOneBackground(season, group, isDay);
         }
-      }catch(e){
-        console.log("Wetter Fehler", e);
-      }
+      }catch(e){ console.log("Wetter Fehler", e); }
     }
 
     function pickPlanByTime(now = new Date()){
       const m = now.getHours() * 60 + now.getMinutes();
-
       const SLOTS = [
         { start: "07:30", end: "08:30", file: "Frühstück.jpg" },
         { start: "11:45", end: "13:00", file: "Mittagessen.jpg" },
         { start: "14:30", end: "15:30", file: "Nachmittagskaffee.jpg" },
         { start: "17:30", end: "19:00", file: "Abendbrot.jpg" }
       ];
-
-      function toMin(t){
-        const parts = String(t).split(":");
-        const hh = Number(parts[0] || 0);
-        const mm = Number(parts[1] || 0);
-        return hh * 60 + mm;
-      }
-
-      for (const s of SLOTS){
-        const a = toMin(s.start);
-        const b = toMin(s.end);
-        if (m >= a && m < b) return s.file;
-      }
+      function toMin(t){ const parts = String(t).split(":"); return Number(parts || 0) * 60 + Number(parts || 0); }
+      for (const s of SLOTS){ const a = toMin(s.start); const b = toMin(s.end); if (m >= a && m < b) return s.file; }
       return "Speiseplan.jpg";
     }
 
     function setPlanImageWithFallback(imgEl, file){
-      const candidates = (String(file).startsWith("Frühstück"))
-        ? ["Frühstück.jpg", "Fruehstueck.jpg"]
-        : [file];
-
+      const candidates = (String(file).startsWith("Frühstück")) ? ["Frühstück.jpg", "Fruehstueck.jpg"] : [file];
       let i = 0;
       function tryNext(){
-        const f = candidates[i];
+        const f = candidates;
         const url = encodeURI(f) + "?v=" + Date.now();
-        imgEl.onerror = () => {
-          imgEl.onerror = null;
-          i += 1;
-          if (i < candidates.length) tryNext();
-        };
+        imgEl.onerror = () => { imgEl.onerror = null; i += 1; if (i < candidates.length) tryNext(); };
         imgEl.src = url;
       }
       tryNext();
@@ -775,22 +596,12 @@
 
     function startPlanScheduler(){
       const img = document.getElementById("plan-img");
-let lastFile = null;
-
-      function update(force){
-        const file = pickPlanByTime(new Date());
-        if (!force && file === lastFile) return;
-        setPlanImageWithFallback(img, file);
-        lastFile = file;
-}
-
+      let lastFile = null;
+      function update(force){ const file = pickPlanByTime(new Date()); if (!force && file === lastFile) return; setPlanImageWithFallback(img, file); lastFile = file; }
       update(true);
       setInterval(() => update(false), 10 * 1000);
-
       window.addEventListener("focus", () => update(true));
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) update(true);
-      });
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) update(true); });
     }
 
     function startBackgroundTestRotation(){
@@ -805,77 +616,29 @@ let lastFile = null;
 
     function startQuotes(){
       const demoQuote = params.get("demoquote");
-      if (demoQuote === "1"){
-        document.getElementById("quote").innerText =
-          "„Heute zählt ein freundliches Wort, ein offenes Ohr und ein kleines Zeichen von Respekt.“";
-        return;
-      }
-
-      loadQuotes().then((quotes) => {
-        if (qSec && qSec > 0) startQuoteRotation(quotes, qSec);
-        else setDailyQuote(quotes);
-      });
+      if (demoQuote === "1"){ document.getElementById("quote").innerText = ""Heute zählt ein freundliches Wort, ein offenes Ohr und ein kleines Zeichen von Respekt.""; return; }
+      loadQuotes().then((quotes) => { if (qSec && qSec > 0) startQuoteRotation(quotes, qSec); else setDailyQuote(quotes); });
     }
 
-    (function autoPeriodicReload(){
-      const hours = 6;
-      setInterval(() => location.reload(), hours * 60 * 60 * 1000);
-    })();
-
-    (function autoDailyReload(){
-      function schedule(){
-        const now = new Date();
-        const next = new Date(now);
-        next.setHours(3, 10, 0, 0);
-        if (next <= now) next.setDate(next.getDate() + 1);
-        setTimeout(() => location.reload(), next - now);
-      }
-      schedule();
-    })();
+    (function autoPeriodicReload(){ const hours = 6; setInterval(() => location.reload(), hours * 60 * 60 * 1000); })();
+    (function autoDailyReload(){ function schedule(){ const now = new Date(); const next = new Date(now); next.setHours(3, 10, 0, 0); if (next <= now) next.setDate(next.getDate() + 1); setTimeout(() => location.reload(), next - now); } schedule(); })();
 
     updateClock();
     setInterval(updateClock, 1000);
-
     startPlanScheduler();
     startQuotes();
-
     fetchWeather();
     setInterval(fetchWeather, 5 * 60 * 1000);
-
     startBackgroundTestRotation();
   </script>
-<!-- WATCHDOG START -->
-<script>
+  <script>
 (() => {
   let lastBeat = Date.now();
-
-  // Herzschlag: wenn JS normal läuft, wird das regelmäßig aktualisiert
   setInterval(() => { lastBeat = Date.now(); }, 5000);
-
-  // Wenn Timer/JS hängen: Seite neu laden
-  setInterval(() => {
-    if (Date.now() - lastBeat > 90000) {
-      const u = new URL(location.href);
-      u.searchParams.set("r", String(Date.now()));
-      location.replace(u.toString());
-    }
-  }, 15000);
-
-  // nachts einmal leise neu laden (optional, meist merkt das niemand)
-  const nightly = () => {
-    const d = new Date();
-    const t = new Date(d);
-    t.setHours(3, 17, 0, 0);
-    if (t.getTime() <= d.getTime()) t.setDate(t.getDate() + 1);
-    setTimeout(() => {
-      const u = new URL(location.href);
-      u.searchParams.set("r", String(Date.now()));
-      location.replace(u.toString());
-    }, t.getTime() - d.getTime());
-  };
+  setInterval(() => { if (Date.now() - lastBeat > 90000) { const u = new URL(location.href); u.searchParams.set("r", String(Date.now())); location.replace(u.toString()); } }, 15000);
+  const nightly = () => { const d = new Date(); const t = new Date(d); t.setHours(3, 17, 0, 0); if (t.getTime() <= d.getTime()) t.setDate(t.getDate() + 1); setTimeout(() => { const u = new URL(location.href); u.searchParams.set("r", String(Date.now())); location.replace(u.toString()); }, t.getTime() - d.getTime()); };
   nightly();
 })();
 </script>
-<!-- WATCHDOG END -->
 </body>
 </html>
