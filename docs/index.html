@@ -306,28 +306,6 @@ body {
   overflow: hidden;
 }
 /* RESPONSIVE ZOOM END */
-
-/* LOGO FIX START */
-#drkLogo {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-
-  height: clamp(58px, 6vh, 74px);
-  width: auto;
-
-  padding: 6px 10px;
-  border-radius: 12px;
-
-  background: rgba(255,255,255,0.62);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-  z-index: 80;
-  pointer-events: none;
-}
-/* LOGO FIX END */
 </style>
 </head>
 
@@ -349,7 +327,7 @@ body {
       </div>
 
       <div class="logo-box">
-        
+        <img alt="DRK Logo" src="drk-logo.png">
       </div>
     </header>
 
@@ -838,43 +816,5 @@ let lastFile = null;
 })();
 </script>
 <!-- RESPONSIVE ZOOM SCRIPT END -->
-<img id="drkLogo" src="drk-logo-wide.png" alt="Deutsches Rotes Kreuz">
-<!-- CLEANUP DOT START -->
-<script>
-(() => {
-  const isTiny = (n) => Number.isFinite(n) && n > 0 && n < 60;
-
-  function removeTopRightDots() {
-    const els = Array.from(document.body.querySelectorAll("*"));
-    for (const el of els) {
-      if (el.id === "drkLogo") continue;
-      if (el.closest && el.closest("#drkLogo")) continue;
-
-      const cs = getComputedStyle(el);
-      if (cs.position !== "fixed") continue;
-
-      const r = el.getBoundingClientRect();
-      const nearTop = r.top >= -5 && r.top < 60;
-      const nearRight = (window.innerWidth - r.right) >= -5 && (window.innerWidth - r.right) < 60;
-
-      if (!nearTop || !nearRight) continue;
-
-      const w = r.width;
-      const h = r.height;
-
-      const text = (el.textContent || "").trim();
-      const hasImg = el.querySelector && el.querySelector("img");
-
-      if (text.length === 0 && !hasImg && isTiny(w) && isTiny(h)) {
-        el.remove();
-      }
-    }
-  }
-
-  window.addEventListener("load", removeTopRightDots);
-  setTimeout(removeTopRightDots, 800);
-})();
-</script>
-<!-- CLEANUP DOT END -->
 </body>
 </html>
