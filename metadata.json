@@ -1,0 +1,8 @@
+{
+  "name": "DRK-Melm Dashboard",
+  "description": "A high-performance React dashboard featuring real-time data visualization, AI-powered business insights via Gemini, and a sleek, modern enterprise UI.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
