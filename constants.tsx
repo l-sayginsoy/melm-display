@@ -1,6 +1,7 @@
+
 import React from 'react';
 
-export const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/l-sayginsoy/melm-display/main/';
+export const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/l-sayginsoy/drk-display/main/';
 
 export const GITHUB_FILES = {
   event: `${GITHUB_RAW_BASE}event.txt`,

@@ -1,27 +1,33 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import WeatherBackground from './components/WeatherBackground';
 import WeeklyProgram from './components/WeeklyProgram';
 import MealDisplay from './components/MealDisplay';
 import { fetchEventOverride, fetchWeeklyProgram, fetchQuote } from './dataService';
 import { WeeklyProgram as IWeeklyProgram, EventOverride, WeatherData } from './types';
-import { mapWeatherCode } from './constants';
+import { mapWeatherCode, GITHUB_RAW_BASE } from './constants';
 
 const App: React.FC = () => {
   const [time, setTime] = useState(new Date());
   const [programs, setPrograms] = useState<IWeeklyProgram[]>([]);
   const [override, setOverride] = useState<EventOverride | null>(null);
-  const [quote, setQuote] = useState("");
+  const [quote, setQuote] = useState("Willkommen im DRK Melm.");
   const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [logoError, setLogoError] = useState(false);
 
   const updateAllData = useCallback(async () => {
-    const [p, o, q] = await Promise.all([
-      fetchWeeklyProgram(),
-      fetchEventOverride(),
-      fetchQuote()
-    ]);
-    setPrograms(p);
-    setOverride(o);
-    setQuote(q);
+    try {
+      const [p, o, q] = await Promise.all([
+        fetchWeeklyProgram(),
+        fetchEventOverride(),
+        fetchQuote()
+      ]);
+      setPrograms(p || []);
+      setOverride(o);
+      if (q && q.trim().length > 0) setQuote(q);
+    } catch (err) {
+      console.error("Data update failed", err);
+    }
   }, []);
 
   const fetchWeather = useCallback(async () => {
@@ -66,86 +72,105 @@ const App: React.FC = () => {
     const tInterval = setInterval(() => setTime(new Date()), 1000);
     const dInterval = setInterval(updateAllData, 300000);
     const wInterval = setInterval(fetchWeather, 900000);
-    return () => { clearInterval(tInterval); clearInterval(dInterval); clearInterval(wInterval); };
+    return () => { 
+      clearInterval(tInterval); 
+      clearInterval(dInterval); 
+      clearInterval(wInterval); 
+    };
   }, [updateAllData, fetchWeather]);
 
-  return (
-    <div className="relative h-screen w-screen flex flex-col overflow-hidden text-white font-['Inter']">
-      <WeatherBackground code={weather?.code ?? 0} isDay={weather?.isDay ?? true} />
-      
-      {/* Sanfter Kontrast-Gradient oben/unten */}
-      <div className="fixed inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 -z-[5] pointer-events-none"></div>
+  const isDay = weather?.isDay ?? true;
 
-      {/* Header - 12vh */}
-      <header className="h-[12vh] flex items-end px-[4vw] pb-[2vh] shrink-0">
+  return (
+    <div className="relative h-screen w-screen overflow-hidden text-white font-['Inter'] bg-slate-950">
+      {/* Hintergrund (Ganz hinten) */}
+      <WeatherBackground code={weather?.code ?? 0} isDay={isDay} />
+
+      {/* Header Bereich */}
+      <header className="relative h-[12vh] flex items-end px-[4vw] pb-[2vh] z-10">
         <div className="flex items-center gap-[2.5vw]">
-          <div className="text-[8vh] font-[900] tracking-tighter leading-none drop-shadow-2xl">
+          <div className="text-[8.5vh] font-[900] tracking-tighter leading-none filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
             {time.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
           </div>
-          <div className="h-[5.5vh] w-[3px] bg-white/30 rounded-full"></div>
-          <div className="flex flex-col">
+          <div className="h-[5.5vh] w-[3px] bg-white/40 rounded-full mx-1"></div>
+          <div className="flex flex-col filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
             <div className="text-[3.2vh] font-black uppercase tracking-tighter leading-none mb-0.5">
               {time.toLocaleDateString('de-DE', { weekday: 'long' })}
             </div>
-            <div className="text-[1.8vh] font-semibold text-white/70 tracking-widest uppercase">
+            <div className="text-[1.8vh] font-semibold text-white/90 tracking-widest uppercase">
               {time.toLocaleDateString('de-DE', { day: '2-digit', month: 'long' })}
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content - 81.5vh (Platz für den schmaleren Footer) */}
-      <main className="h-[81.5vh] flex px-[4vw] pt-[1vh] pb-[3.5vh] gap-[3vw] items-stretch min-h-0">
-        <div className="flex-[1.6] h-full">
+      {/* Main Content Bereich */}
+      <main className="relative h-[79vh] flex px-[4vw] pt-[2vh] pb-[4vh] gap-[3vw] min-h-0 z-10 overflow-hidden">
+        <div className="flex-[1.6] h-full overflow-hidden">
            <MealDisplay override={override} />
         </div>
-        <div className="flex-[0.9] h-full">
+        <div className="flex-[0.9] h-full overflow-hidden">
           <WeeklyProgram programs={programs} />
         </div>
       </main>
 
-      {/* Footer - Edler Glassmorphism-Stil, reduziert auf 6.5vh */}
-      <footer className="h-[6.5vh] bg-white/90 backdrop-blur-md text-slate-900 flex items-center justify-between px-[3vw] z-20 relative border-t border-white/20 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+      {/* FOOTER */}
+      <footer className="fixed bottom-0 left-0 right-0 h-[9vh] bg-white text-slate-900 flex items-center justify-between px-[3vw] z-[999] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t border-slate-200">
         
-        {/* Wetter Kompakt */}
-        <div className="w-[28%] flex items-center gap-6">
+        {/* Wetter Infos (Links) */}
+        <div className="w-[30%] flex items-center shrink-0">
           {weather && (
-            <>
+            <div className="flex items-center gap-6">
               <div className="flex items-center gap-3">
-                <span className="text-[4vh] leading-none drop-shadow-sm">{mapWeatherCode(weather.code).icon}</span>
-                <div className="flex flex-col justify-center">
-                  <span className="text-[3.2vh] font-black tracking-tighter leading-none">{weather.temp}°</span>
-                  <span className="text-[0.8vh] font-black tracking-[0.15em] text-blue-600 uppercase">Ludwigshafen</span>
+                <span className="text-[5vh] leading-none">{mapWeatherCode(weather.code).icon}</span>
+                <div className="flex flex-col">
+                  <span className="text-[3.5vh] font-black tracking-tighter leading-none text-slate-900">{weather.temp}°</span>
+                  <span className="text-[1vh] font-bold text-slate-900 uppercase tracking-widest mt-0.5">Ludwigshafen</span>
                 </div>
               </div>
-              <div className="h-[3vh] w-[1px] bg-slate-200"></div>
-              <div className="flex gap-2">
+              <div className="h-[4vh] w-px bg-slate-200"></div>
+              <div className="flex gap-3">
                 {weather.forecast.map((f, i) => (
-                  <div key={i} className="flex flex-col items-center w-[2vw]">
-                    <span className="text-[0.7vh] font-bold text-slate-400 uppercase mb-0.5">{f.day}</span>
-                    <span className="text-[1.8vh] leading-none mb-1">{f.icon}</span>
-                    <span className="text-[1vh] font-bold text-slate-800 tabular-nums">{f.max}°</span>
+                  <div key={i} className="flex flex-col items-center">
+                    <span className="text-[0.7vh] font-bold text-slate-900 uppercase leading-none mb-1 opacity-60">{f.day}</span>
+                    <span className="text-[2.2vh] leading-none mb-1">{f.icon}</span>
+                    <span className="text-[1.1vh] font-black text-slate-900 leading-none">{f.max}°</span>
                   </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
         </div>
 
-        {/* Quote - Eleganter zentriert */}
+        {/* Zitat (Mitte) */}
         <div className="flex-1 flex justify-center px-10">
-          <p className="text-[1.7vh] font-medium italic text-slate-500 leading-tight text-center max-w-[90%] line-clamp-1">
+          <p className="text-[2.2vh] font-bold italic text-slate-700 leading-tight text-center line-clamp-2">
             "{quote}"
           </p>
         </div>
 
-        {/* Logo - Verkleinert & Diskret */}
-        <div className="w-[28%] flex justify-end items-center">
-          <img 
-            src="https://raw.githubusercontent.com/l-sayginsoy/melm-display/main/DRK-Logo_lang_RGB.png" 
-            alt="DRK Logo" 
-            className="h-[2.5vh] w-auto object-contain opacity-90"
-          />
+        {/* Logo (Rechts) */}
+        <div className="w-[30%] flex justify-end items-center shrink-0">
+          {!logoError ? (
+            <img 
+              src={`${GITHUB_RAW_BASE}DRK-Logo_lang_RGB.png`} 
+              alt="DRK Logo" 
+              className="h-[4vh] w-auto object-contain block"
+              onError={() => {
+                console.error("Logo blockiert, wechsle zu Text-Fallback");
+                setLogoError(true);
+              }}
+            />
+          ) : (
+            /* Hochwertiges Text-Fallback falls das Bild nicht lädt */
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col items-end">
+                <span className="text-[2.5vh] font-black text-red-600 leading-none tracking-tighter">DRK</span>
+                <span className="text-[0.9vh] font-bold text-slate-500 uppercase tracking-[0.2em] leading-none mt-1">Begegnungsstätte</span>
+              </div>
+              <div className="w-[1.5vh] h-[4vh] bg-red-600 rounded-sm"></div>
+            </div>
+          )}
         </div>
       </footer>
     </div>

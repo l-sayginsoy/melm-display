@@ -39,7 +39,7 @@ export const fetchWeeklyProgram = async (): Promise<WeeklyProgram[]> => {
     const lines = text.trim().split('\n');
     return lines.map(line => {
       const [day, title, location, time] = line.split('|');
-      return { day, title, location, time };
+      return { day: day || '', title: title || '', location: location || '', time: time || '' };
     });
   } catch {
     return [];
@@ -47,13 +47,26 @@ export const fetchWeeklyProgram = async (): Promise<WeeklyProgram[]> => {
 };
 
 export const fetchQuote = async (): Promise<string> => {
+  const fallback = "Willkommen im DRK Melm.";
   try {
     const response = await fetch(`${GITHUB_FILES.quotes}?t=${Date.now()}`);
+    if (!response.ok) return fallback;
     const quotes = await response.json();
+    
+    // Falls das JSON kein Array ist, sondern ein Objekt oder String
+    if (!Array.isArray(quotes)) {
+       return typeof quotes === 'string' ? quotes : fallback;
+    }
+
+    if (quotes.length === 0) return fallback;
+
     const today = new Date();
     const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
-    const quote = quotes[dayOfYear % quotes.length];
-    return quote
+    const rawQuote = quotes[dayOfYear % quotes.length];
+    
+    const finalQuote = typeof rawQuote === 'string' ? rawQuote : fallback;
+
+    return finalQuote
       .replace(/Ã¤/g, 'ä')
       .replace(/Ã¶/g, 'ö')
       .replace(/Ã¼/g, 'ü')
@@ -61,7 +74,8 @@ export const fetchQuote = async (): Promise<string> => {
       .replace(/Ã"/g, 'Ä')
       .replace(/Ã–/g, 'Ö')
       .replace(/Ãœ/g, 'Ü');
-  } catch {
-    return "Willkommen im DRK Melm.";
+  } catch (err) {
+    console.error("Quote fetch error", err);
+    return fallback;
   }
 };
