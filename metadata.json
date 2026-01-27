@@ -1,8 +1,5 @@
 {
-  "name": "DRK-Melm Dashboard",
-  "description": "A high-performance React dashboard featuring real-time data visualization, AI-powered business insights via Gemini, and a sleek, modern enterprise UI.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
+  "name": "DRK-Melm Infodisplay",
+  "description": "Ein modernes Informationsdisplay für die DRK Begegnungsstätte Melm mit Wetter, Speiseplan und Wochenprogramm.",
+  "requestFramePermissions": []
 }

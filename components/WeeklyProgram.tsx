@@ -1,106 +1,95 @@
-
-import React, { useMemo } from 'react';
+import React from 'react';
 import { WeeklyProgram as IWeeklyProgram } from '../types';
 import { DAYS_ORDER } from '../constants';
 
 const WeeklyProgram: React.FC<{ programs: IWeeklyProgram[] }> = ({ programs }) => {
   const now = new Date();
+  
+  const getWeekNumber = (d: Date) => {
+    const target = new Date(d.valueOf());
+    const dayNr = (d.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNr + 3);
+    const firstThursday = target.valueOf();
+    target.setMonth(0, 1);
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+    }
+    return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
+  };
+
+  const getMonday = (d: Date) => {
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    const result = new Date(d);
+    result.setDate(diff);
+    return result;
+  };
+
+  const monday = getMonday(new Date(now));
   const todayIndex = now.getDay(); 
   const todayMapped = todayIndex === 0 ? 6 : todayIndex - 1;
   const todayStr = DAYS_ORDER[todayMapped];
+  const kw = getWeekNumber(now);
 
-  const weekDates = useMemo(() => {
-    const d = new Date(now);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1); 
-    const monday = new Date(d.setDate(diff));
-    
-    return DAYS_ORDER.map((_, i) => {
-      const dateObj = new Date(monday);
-      dateObj.setDate(monday.getDate() + i);
-      return dateObj.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) + '.';
-    });
-  }, [now]);
-
-  const groupedPrograms = useMemo(() => {
-    const groups: Record<string, IWeeklyProgram[]> = {};
-    DAYS_ORDER.forEach(day => groups[day] = []);
-    programs.forEach(p => {
-      const dayKey = p.day.toUpperCase().substring(0, 2);
-      if (groups[dayKey]) {
-        groups[dayKey].push(p);
-      }
-    });
-    return groups;
-  }, [programs]);
+  const groupedPrograms = programs.reduce((acc, p) => {
+    const dayKey = p.day.toUpperCase().substring(0, 2);
+    if (!acc[dayKey]) acc[dayKey] = [];
+    acc[dayKey].push(p);
+    return acc;
+  }, {} as Record<string, IWeeklyProgram[]>);
 
   return (
-    <div className="bg-slate-900/80 backdrop-blur-3xl rounded-[3vh] border border-white/10 h-full p-[2.5vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="bg-slate-900/40 backdrop-blur-md rounded-[2vh] border border-white/10 h-full p-[2vh] flex flex-col shadow-lg overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between mb-[2vh] pb-[1.5vh] border-b border-white/5">
-        <div>
-          <h2 className="text-[2.8vh] font-black uppercase tracking-tight text-white leading-none">Wochenplan</h2>
-          <p className="text-[1.3vh] font-bold text-indigo-400 mt-1 uppercase tracking-widest opacity-80">Veranstaltungen & Termine</p>
-        </div>
-        <div className="bg-white/5 px-3 py-1 rounded-full border border-white/10">
-          <span className="text-[1.4vh] font-bold text-white/40 tabular-nums uppercase">KW {Math.ceil(now.getDate() / 7)}</span>
-        </div>
+      <div className="flex justify-between items-center mb-[1.5vh] px-1 shrink-0">
+        <h2 className="text-[1.6vh] font-bold text-slate-400 uppercase tracking-[0.2em]">Wochenplan</h2>
+        <span className="text-[1.1vh] font-semibold text-slate-600 uppercase tracking-widest">KW {kw}</span>
       </div>
 
-      {/* Days List */}
-      <div className="flex-1 flex flex-col justify-between gap-[0.5vh]">
-        {DAYS_ORDER.map((day, idx) => {
+      {/* Tage-Liste: flex-1 auf den Containern sorgt für gleichmäßige Verteilung ohne Scrollen */}
+      <div className="flex-1 flex flex-col gap-[0.8vh] min-h-0">
+        {DAYS_ORDER.map((day, index) => {
           const isToday = day === todayStr;
-          const dayPrograms = groupedPrograms[day];
-          const calendarDate = weekDates[idx];
+          const dayPrograms = groupedPrograms[day] || [];
+          
+          const dateOfRow = new Date(monday);
+          dateOfRow.setDate(monday.getDate() + index);
+          const dateStr = dateOfRow.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
 
           return (
             <div 
               key={day} 
-              className={`flex items-center gap-[1.5vw] px-[1.5vh] py-[0.8vh] rounded-[2vh] transition-all duration-500 ${
+              className={`flex items-center flex-1 min-h-0 px-[1.5vh] rounded-lg border transition-colors ${
                 isToday 
-                ? 'bg-indigo-600/30 border border-indigo-500/50 shadow-[0_0_20px_rgba(79,70,229,0.2)]' 
-                : 'bg-black/20 border border-transparent'
+                ? 'bg-blue-600/15 border-blue-500/40' 
+                : 'bg-white/[0.02] border-white/5'
               }`}
             >
-              {/* Left: Day/Date */}
-              <div className="flex flex-col items-center justify-center min-w-[4.5vw] py-1">
-                <span className={`text-[1.8vh] font-black leading-none ${isToday ? 'text-white' : 'text-white/40'}`}>
-                  {day}
-                </span>
-                <span className={`text-[1.1vh] font-bold mt-1 tabular-nums ${isToday ? 'text-indigo-200/80' : 'text-white/20'}`}>
-                  {calendarDate}
-                </span>
+              {/* Datum */}
+              <div className="w-[4vw] shrink-0">
+                <div className={`text-[1.5vh] font-bold ${isToday ? 'text-blue-400' : 'text-slate-200'}`}>{day}</div>
+                <div className="text-[0.9vh] text-slate-600 font-medium tabular-nums uppercase">{dateStr}</div>
               </div>
 
-              {/* Center: Time Column (Larger & Centered) */}
-              <div className="flex items-center justify-center min-w-[8.5vw] border-x border-white/5 px-2">
+              {/* Uhrzeit */}
+              <div className="w-[5.5vw] shrink-0 px-2 border-l border-white/5 text-center">
                 {dayPrograms.length > 0 ? (
-                  <span className={`text-[2.8vh] font-black tabular-nums tracking-tighter ${isToday ? 'text-white' : 'text-indigo-400/80'}`}>
+                  <span className={`text-[1.7vh] font-semibold tabular-nums ${isToday ? 'text-white' : 'text-slate-400'}`}>
                     {dayPrograms[0].time}
                   </span>
                 ) : (
-                  <div className="w-4 h-[2px] bg-white/10 rounded-full"></div>
+                  <span className="text-slate-800 text-[1.4vh] opacity-30">—</span>
                 )}
               </div>
 
-              {/* Right: Info Column */}
-              <div className="flex-1 flex flex-col justify-center overflow-hidden pl-2">
+              {/* Event-Titel */}
+              <div className="flex-1 min-w-0 pl-4 border-l border-white/5">
                 {dayPrograms.length > 0 ? (
-                  <>
-                    <span className={`text-[2.2vh] font-bold truncate leading-tight ${isToday ? 'text-white' : 'text-white/90'}`}>
-                      {dayPrograms[0].title}
-                    </span>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className={`text-[1.4vh] font-black uppercase tracking-widest ${isToday ? 'text-indigo-200' : 'text-white/30'}`}>
-                        {dayPrograms[0].location || 'Kleiner Saal'}
-                      </span>
-                    </div>
-                  </>
+                  <h3 className={`text-[1.6vh] font-medium truncate ${isToday ? 'text-white' : 'text-slate-300'}`}>
+                    {dayPrograms[0].title}
+                  </h3>
                 ) : (
-                  <span className="text-[1.5vh] font-medium tracking-wide text-white/5 uppercase italic">
-                    Keine Einträge
-                  </span>
+                  <span className="text-[1.3vh] text-slate-800 font-normal">Keine Termine</span>
                 )}
               </div>
             </div>
